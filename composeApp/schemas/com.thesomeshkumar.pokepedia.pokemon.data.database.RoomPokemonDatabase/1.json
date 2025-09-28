@@ -1,0 +1,145 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "2475071d3dcc1c4bf50f656631c8691f",
+    "entities": [
+      {
+        "tableName": "pokemon",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `height` INTEGER NOT NULL, `weight` INTEGER NOT NULL, `baseExperience` INTEGER NOT NULL, `order` INTEGER NOT NULL, `frontSprite` TEXT, `frontShinySprite` TEXT, `backSprite` TEXT, `backShinySprite` TEXT, `officialArtwork` TEXT, `stats` TEXT NOT NULL, `types` TEXT NOT NULL, `abilities` TEXT NOT NULL, `isLegendary` INTEGER NOT NULL, `isMythical` INTEGER NOT NULL, `description` TEXT NOT NULL, `captureRate` INTEGER NOT NULL, `baseHappiness` INTEGER NOT NULL, `growthRate` TEXT NOT NULL, `habitat` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "height",
+            "columnName": "height",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baseExperience",
+            "columnName": "baseExperience",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frontSprite",
+            "columnName": "frontSprite",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "frontShinySprite",
+            "columnName": "frontShinySprite",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "backSprite",
+            "columnName": "backSprite",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "backShinySprite",
+            "columnName": "backShinySprite",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "officialArtwork",
+            "columnName": "officialArtwork",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "stats",
+            "columnName": "stats",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "types",
+            "columnName": "types",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilities",
+            "columnName": "abilities",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLegendary",
+            "columnName": "isLegendary",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMythical",
+            "columnName": "isMythical",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "captureRate",
+            "columnName": "captureRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baseHappiness",
+            "columnName": "baseHappiness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "growthRate",
+            "columnName": "growthRate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitat",
+            "columnName": "habitat",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2475071d3dcc1c4bf50f656631c8691f')"
+    ]
+  }
+}
