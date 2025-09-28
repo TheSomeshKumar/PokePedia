@@ -1,33 +1,57 @@
-# Compose Multiplatform Application
 
-## Before running!
- - check your system with [KDoctor](https://github.com/Kotlin/kdoctor)  
- - install JDK 17 or higher on your machine  
- - add `local.properties` file to the project root and set a path to Android SDK there  
+# PokePedia
 
-### Android
-To run the application on android device/emulator:  
- - open project in Android Studio and run imported android run configuration  
+PokePedia is a Kotlin Multiplatform project that showcases the use of modern technologies to build a simple, yet powerful application. It is a simple app that displays a list of Pokémon and their details.
 
-To build the application bundle:  
- - run `./gradlew :composeApp:assembleDebug`  
- - find `.apk` file in `composeApp/build/outputs/apk/debug/composeApp-debug.apk`  
+## Features
 
-Run android UI tests on the connected device: `./gradlew :composeApp:connectedDebugAndroidTest`
+- Browse a list of Pokémon.
+- View details of a specific Pokémon.
+- Search for a Pokémon.
+- Offline support.
 
-### Desktop
-Run the desktop application: `./gradlew :composeApp:run`  
-Run the desktop **hot reload** application: `./gradlew :composeApp:hotRunJvm`  
-Run desktop UI tests: `./gradlew :composeApp:jvmTest`  
+## Architecture
 
-### iOS
-To run the application on iPhone device/simulator:  
- - Open `iosApp/iosApp.xcproject` in Xcode and run standard configuration  
- - Or use [Kotlin Multiplatform Mobile plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile) for Android Studio  
+This project follows the principles of Clean Architecture, using the Model-View-ViewModel (MVVM) pattern. The architecture is divided into three main layers:
 
-Run iOS simulator UI tests: `./gradlew :composeApp:iosSimulatorArm64Test`  
+- **Data Layer:** Responsible for providing data to the application. It includes the repository pattern, which abstracts the data sources.
+- **Domain Layer:** Contains the business logic of the application.
+- **Presentation Layer:** The UI of the application, built with Compose Multiplatform.
 
-### Wasm Browser (Alpha)
-Run the browser application: `./gradlew :composeApp:wasmJsBrowserDevelopmentRun --continue`  
-Run browser UI tests: `./gradlew :composeApp:wasmJsBrowserTest`  
+## Tech Stack
 
+- **Kotlin:** The programming language used for the project.
+- **Compose Multiplatform:** For building the user interface for Android, iOS, and Desktop.
+- **Ktor:** For making network requests.
+- **SQLDelight:** For local database storage.
+- **Koin:** For dependency injection.
+- **Coroutines & Flow:** For asynchronous programming.
+
+## Screenshots
+
+| List | Detail |
+| --- | --- |
+| <img src="art/list.png" width="250"/> | <img src="art/detail.png" width="250"/> |
+
+## Getting Started
+
+To get a local copy up and running, please follow these simple steps.
+
+### Prerequisites
+
+- Android Studio
+- Kotlin Multiplatform Mobile plugin
+- Xcode for iOS development
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/TheSomeshKumar/PokePedia.git
+   ```
+2. Open the project in Android Studio and wait for Gradle to sync.
+3. Run the app on your desired platform (Android, iOS, or Desktop).
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
