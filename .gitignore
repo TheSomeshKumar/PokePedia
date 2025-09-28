@@ -1,0 +1,76 @@
+### Gradle ###
+.gradle/
+.kotlin/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+**/build/
+**/out/
+
+### IntelliJ / Android Studio ###
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+### Kotlin/Java ###
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+*.log
+
+### Android ###
+*.apk
+*.ap_
+*.aab
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.keystore
+*.jks
+
+### iOS / Xcode ###
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+Pods/
+.framework
+*.xcuserstate
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### JVM Desktop ###
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+
+### Other ###
+*.swp
+*.tmp
+*.lock
