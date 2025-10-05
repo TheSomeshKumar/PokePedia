@@ -29,7 +29,7 @@ data class PokemonBasicDTO(
             .toInt()
 
     fun getImageUrl(): String {
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" + "pokemon/other/official-artwork/$id.png"
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
     }
 }
 

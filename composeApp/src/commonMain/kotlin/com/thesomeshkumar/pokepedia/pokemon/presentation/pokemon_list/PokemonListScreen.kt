@@ -37,6 +37,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -97,15 +99,24 @@ fun PokemonListContent(
 ) {
     val listState = rememberLazyListState()
 
-    // Pagination logic
-    LaunchedEffect(listState) {
+    // Pagination logic - Load more when reaching near the bottom
+    LaunchedEffect(listState, state.isLoadingMore, state.canLoadMore, state.searchQuery) {
         snapshotFlow {
-            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-        }.collect { lastVisibleIndex ->
-            if (lastVisibleIndex != null && lastVisibleIndex >= state.pokemonList.size - 3 && state.canLoadMore && !state.isLoadingMore && state.searchQuery.isEmpty()) {
-                onAction(PokemonListAction.LoadNextPage)
-            }
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+            val totalItems = layoutInfo.totalItemsCount
+            
+            // Return true when we're within 1 item of the bottom
+            lastVisibleIndex >= totalItems - 2 && totalItems > 0
         }
+            .distinctUntilChanged() // Only trigger when the condition actually changes
+            .filter { shouldLoadMore -> shouldLoadMore } // Only proceed when true
+            .collect {
+                // Additional checks before loading
+                if (state.canLoadMore && !state.isLoadingMore && state.searchQuery.isEmpty()) {
+                    onAction(PokemonListAction.LoadNextPage)
+                }
+            }
     }
 
     Column(
