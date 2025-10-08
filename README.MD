@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎮 PokePedia
+#  <img src="art/app_icon.png" alt="PokePedia Logo" width="20"/>PokePedia
 
-<img src="art/app_icon.png" alt="PokePedia Logo" width="200"/>
+
 
 ### A Modern Kotlin Multiplatform Pokémon Encyclopedia
 
