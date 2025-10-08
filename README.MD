@@ -1,8 +1,6 @@
 <div align="center">
 
-#  <img src="art/app_icon.png" alt="PokePedia Logo" width="20"/>PokePedia
-
-
+#  <img src="art/app_icon.png" alt="PokePedia Logo" width="50"/>PokePedia
 
 ### A Modern Kotlin Multiplatform Pokémon Encyclopedia
 
@@ -12,7 +10,7 @@
 [![Room](https://img.shields.io/badge/Room-2.8.1-green)](https://developer.android.com/jetpack/androidx/releases/room)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Features](#-features) • [Architecture](#-architecture) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Contributing](#-contributing)
+[Features](#-features) • [Architecture](#%EF%B8%8F-architecture) • [Sequence Diagrams](#-data-flow-sequence-diagrams) • [Getting Started](#-getting-started) • [Contributing](#-contributing)
 
 </div>
 
@@ -54,9 +52,9 @@ Powered by [PokéAPI](https://pokeapi.co/), PokePedia offers comprehensive Poké
 ### Android
 <p align="center">
 
-[//]: # (  <img src="art/android_list.png" width="250" alt="Android List"/>)
+  <img src="art/android_list.png" width="250" alt="Android List"/>)
 
-[//]: # (  <img src="art/android_detail.png" width="250" alt="Android Detail"/>)
+  <img src="art/android_detail.png" width="250" alt="Android Detail"/>)
 
 </p>
 
@@ -71,8 +69,7 @@ Powered by [PokéAPI](https://pokeapi.co/), PokePedia offers comprehensive Poké
 
 ### Desktop
 <p align="center">
-
-  <img src=art/"art/desktop_detail.png" width="400" alt="Desktop List"/> 
+  <img src="art/desktop_detail.png" width="400" alt="Desktop List"/> 
 </p>
 
 ---
