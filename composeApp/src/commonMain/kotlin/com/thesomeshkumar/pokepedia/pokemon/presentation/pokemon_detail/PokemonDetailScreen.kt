@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -103,13 +104,15 @@ fun PokemonDetailContent(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader = koinInject()
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        when {
-            state.isLoading -> {
+    when {
+        state.isLoading -> {
+            Box(modifier = modifier.fillMaxSize()) {
                 LoadingContent(modifier = Modifier.align(Alignment.Center))
             }
+        }
 
-            state.errorMessage != null -> {
+        state.errorMessage != null -> {
+            Box(modifier = modifier.fillMaxSize()) {
                 ErrorContent(
                     message = state.errorMessage.asString(),
                     onRetryClick = {
@@ -118,48 +121,61 @@ fun PokemonDetailContent(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+        }
 
-            state.pokemon != null -> {
+        state.pokemon != null -> {
+            val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+            
+            Box(modifier = modifier.fillMaxSize()) {
+                // Scrollable content
                 PokemonContent(
                     pokemon = state.pokemon,
-                    imageLoader = imageLoader
+                    imageLoader = imageLoader,
+                    scrollBehavior = scrollBehavior,
+                    modifier = Modifier.fillMaxSize()
+                )
+                
+                // Floating Top Bar
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = state.pokemon.formattedName,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    },
+                    actions = {},
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
                 )
             }
         }
-
-        // Top Bar
-        TopAppBar(
-            title = {
-                Text(
-                    text = state.pokemon?.formattedName ?: "Pokemon",
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            },
-            actions = {},
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent
-            )
-        )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PokemonContent(
     pokemon: PokemonUI,
     imageLoader: ImageLoader,
+    scrollBehavior: androidx.compose.material3.TopAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         item {

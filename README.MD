@@ -2,7 +2,7 @@
 
 # 🎮 PokePedia
 
-[//]: # (<img src="art/app_icon.png" alt="PokePedia Logo" width="200"/>)
+<img src="art/app_icon.png" alt="PokePedia Logo" width="200"/>
 
 ### A Modern Kotlin Multiplatform Pokémon Encyclopedia
 
@@ -58,25 +58,21 @@ Powered by [PokéAPI](https://pokeapi.co/), PokePedia offers comprehensive Poké
 
 [//]: # (  <img src="art/android_detail.png" width="250" alt="Android Detail"/>)
 
-[//]: # (  <img src="art/android_search.png" width="250" alt="Android Search"/>)
 </p>
 
 ### iOS
 <p align="center">
 
-[//]: # (  <img src="art/ios_list.png" width="250" alt="iOS List"/>)
+  <img src="art/ios_list.png" width="250" alt="iOS List"/>
 
-[//]: # (  <img src="art/ios_detail.png" width="250" alt="iOS Detail"/>)
+  <img src="art/ios_detail.png" width="250" alt="iOS Detail"/>)\
 
-[//]: # (  <img src="art/ios_evolution.png" width="250" alt="iOS Evolution"/>)
 </p>
 
 ### Desktop
 <p align="center">
 
-[//]: # (  <img src=art/"art/desktop_list.png" width="400" alt="Desktop List"/>)
-
-[//]: # (  <img src="desktop_detail.png" width="400" alt="Desktop Detail"/>)
+  <img src=art/"art/desktop_detail.png" width="400" alt="Desktop List"/> 
 </p>
 
 ---
@@ -312,15 +308,7 @@ sequenceDiagram
     deactivate Repo
     VM-->>UI: Update state
     deactivate VM
-```
-
-### 🎯 Layer Responsibilities
-
-| Layer | Responsibilities | Technologies |
-|-------|-----------------|--------------|
-| **🎨 Presentation** | • UI rendering and user interactions<br>• State management and events<br>• Navigation between screens<br>• Platform-specific UI adaptations | Compose Multiplatform<br>StateFlow<br>Material 3<br>Coil (image loading) |
-| **🧠 Domain** | • Business logic and rules<br>• Entity definitions<br>• Repository interfaces<br>• Use case orchestration | Pure Kotlin<br>No dependencies |
-| **💾 Data** | • Repository implementations<br>• Data source management<br>• DTO to Domain mapping<br>• Network and database operations | Ktor Client<br>Room Database<br>Kotlinx Serialization |
+``` 
 
 ---
 
@@ -493,7 +481,6 @@ PokePedia/
 ├── build.gradle.kts                        # Root build configuration
 ├── settings.gradle.kts                     # Project settings
 ├── gradle.properties                       # Gradle properties
-├── AGENTS.md                               # Architecture guidelines
 ├── ARCHITECTURE.md                         # Detailed architecture docs
 ├── LICENSE                                 # MIT License
 └── README.MD                               # This file
@@ -502,37 +489,6 @@ PokePedia/
 ---
 
 ## 🚀 Getting Started
-
-### Prerequisites
-
-Ensure you have the following tools installed:
-
-| Tool | Version | Required For | Download |
-|------|---------|--------------|----------|
-| **Android Studio** | Ladybug+ | All platforms | [Download](https://developer.android.com/studio) |
-| **Kotlin Multiplatform Plugin** | Latest | All platforms | Install from Android Studio |
-| **JDK** | 17 or higher | All platforms | [Download](https://adoptium.net/) |
-| **Xcode** | 15.0+ | iOS only | [Mac App Store](https://apps.apple.com/app/xcode/id497799835) |
-| **CocoaPods** | Latest | iOS only | `sudo gem install cocoapods` |
-
-### Installation Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/TheSomeshKumar/PokePedia.git
-   cd PokePedia
-   ```
-
-2. **Open in Android Studio**
-   - Launch Android Studio
-   - Select **File → Open**
-   - Navigate to the cloned `PokePedia` directory
-   - Click **Open** and wait for Gradle sync to complete
-
-3. **Sync Project**
-   - Android Studio will automatically sync Gradle dependencies
-   - If not, click **File → Sync Project with Gradle Files**
-   - Wait for all dependencies to download
 
 ### Running the Application
 
@@ -620,97 +576,6 @@ open iosApp/iosApp.xcodeproj
 
 ---
 
-## 🧪 Testing
-
-### Run Unit Tests
-```bash
-# All platforms
-./gradlew test
-
-# Android only
-./gradlew testDebugUnitTest
-
-# Common tests only
-./gradlew :composeApp:cleanTestCommonMainUnitTest :composeApp:testCommonMainUnitTest
-```
-
-### Run UI Tests (Android)
-```bash
-./gradlew connectedAndroidTest
-```
-
----
-
-## 🎨 Code Style & Architecture Guidelines
-
-This project follows Clean Architecture principles with specific guidelines documented in:
-- **[AGENTS.md](AGENTS.md)** - Architecture patterns and coding standards for AI assistants
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed architecture documentation
-
-### Key Principles
-
-1. **Separation of Concerns**: Clear boundaries between layers
-2. **Dependency Rule**: Dependencies point inward (Presentation → Domain ← Data)
-3. **Repository Pattern**: Abstract data sources behind interfaces
-4. **Immutable State**: UI state is immutable and flows unidirectionally
-5. **Result Type**: Use `Result<T, E>` for error handling
-6. **Action Pattern**: Sealed classes for user interactions
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome and appreciated! Here's how you can contribute:
-
-### How to Contribute
-
-1. **Fork the repository**
-   ```bash
-   # Click the 'Fork' button at the top right of this page
-   ```
-
-2. **Clone your fork**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/PokePedia.git
-   cd PokePedia
-   ```
-
-3. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-
-4. **Make your changes**
-   - Follow the existing code style
-   - Add tests for new features
-   - Update documentation as needed
-   - Ensure all tests pass
-
-5. **Commit your changes**
-   ```bash
-   git commit -m "feat: Add amazing feature"
-   ```
-   
-   We follow [Conventional Commits](https://www.conventionalcommits.org/):
-   - `feat:` New features
-   - `fix:` Bug fixes
-   - `docs:` Documentation changes
-   - `style:` Code style changes (formatting, etc.)
-   - `refactor:` Code refactoring
-   - `test:` Adding or updating tests
-   - `chore:` Maintenance tasks
-
-6. **Push to your fork**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-
-7. **Open a Pull Request**
-   - Go to the original repository
-   - Click "New Pull Request"
-   - Select your feature branch
-   - Provide a clear description of your changes
-
 ### Contribution Guidelines
 
 - Write clean, readable, and maintainable code
@@ -719,10 +584,6 @@ Contributions are welcome and appreciated! Here's how you can contribute:
 - Write unit tests for new functionality
 - Ensure backward compatibility
 - Update the README if you add new features
-
-### Code of Conduct
-
-Please note that this project adheres to a Code of Conduct. By participating, you are expected to uphold this code. Please be respectful and constructive in all interactions.
 
 ---
 
@@ -759,8 +620,6 @@ This project wouldn't be possible without these amazing resources:
 - **[Material Design](https://m3.material.io/)** - Design system and guidelines
 - **Android & iOS Communities** - For excellent documentation and support
 
-Special thanks to all [contributors](https://github.com/TheSomeshKumar/PokePedia/graphs/contributors) who have helped improve this project!
-
 ---
 
 ## 📞 Contact & Support
@@ -772,29 +631,11 @@ Special thanks to all [contributors](https://github.com/TheSomeshKumar/PokePedia
 - 🐙 GitHub: [@TheSomeshKumar](https://github.com/TheSomeshKumar)
 - 💼 LinkedIn: [linkedin.com/in/thesomeshkumar](https://linkedin.com/in/thesomeshkumar)
 - 🐦 Twitter: [@TheSomeshKumar](https://twitter.com/TheSomeshKumar)
-- 📧 Email: contact@thesomeshkumar.com
-
-### 🔗 Links
-
-- **📦 Repository**: [github.com/TheSomeshKumar/PokePedia](https://github.com/TheSomeshKumar/PokePedia)
-- **🐛 Issues**: [Report bugs](https://github.com/TheSomeshKumar/PokePedia/issues)
-- **💡 Feature Requests**: [Suggest features](https://github.com/TheSomeshKumar/PokePedia/issues/new)
-- **📖 Documentation**: [View docs](https://github.com/TheSomeshKumar/PokePedia/wiki)
-
-### 💬 Get Help
-
-- 📚 Check out the [Wiki](https://github.com/TheSomeshKumar/PokePedia/wiki) for detailed guides
-- 🔍 Search [existing issues](https://github.com/TheSomeshKumar/PokePedia/issues) before creating new ones
-- 💭 Join discussions in [GitHub Discussions](https://github.com/TheSomeshKumar/PokePedia/discussions)
-
----
 
 <div align="center">
 
 ### ⭐ Star this repository if you find it helpful!
-
-### 🍴 Fork it to create your own Pokémon app!
-
+ 
 **Made with ❤️ and Kotlin Multiplatform**
 
 [⬆ Back to Top](#-pokepedia)
