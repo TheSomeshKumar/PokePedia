@@ -1,6 +1,6 @@
 <div align="center">
 
-#  <img src="art/app_icon.png" alt="PokePedia Logo" width="50"/>PokePedia
+#  <img src="art/app_icon.png" alt="PokePedia Logo" width="30"/>PokePedia
 
 ### A Modern Kotlin Multiplatform Pokémon Encyclopedia
 
@@ -32,45 +32,30 @@ Powered by [PokéAPI](https://pokeapi.co/), PokePedia offers comprehensive Poké
 - **📊 Detailed Information**: View comprehensive stats, abilities, types, and characteristics
 - **🧬 Evolution Chains**: Visualize complete evolution paths with methods and requirements
 - **🎨 Type Colors**: Dynamic theming based on Pokémon types with Material Kolor
-- **🖼️ High-Quality Images**: Official artwork and sprites for every Pokémon
 - **📈 Stats Visualization**: Visual representation of base stats with comparison
-
-### 💾 Technical Features
-- **🌐 Multiplatform Support**: Single codebase for Android, iOS, and Desktop
-- **📴 Offline-First**: Local caching with Room database for offline access
-- **⚡ Fast Performance**: Parallel API calls and intelligent data loading
-- **🔄 Real-time Updates**: Reactive state management with StateFlow
-- **🎭 Material 3 Design**: Modern UI with dynamic color theming
-- **📱 Responsive Layouts**: Adaptive UI for phones, tablets, and desktops
-- **🌙 Theme Support**: Light and dark theme with system preference detection
-- **♿ Accessibility**: Screen reader support and accessible UI components
 
 ---
 
 ## 📸 Screenshots
 
 ### Android
-<p align="center">
 
-  <img src="art/android_list.png" width="250" alt="Android List"/>)
-
-  <img src="art/android_detail.png" width="250" alt="Android Detail"/>)
-
-</p>
+| List | Detail |
+|:----:|:------:|
+| <img src="art/android_list.png" width="250" alt="Android List"/> | <img src="art/android_detail.png" width="250" alt="Android Detail"/> |
 
 ### iOS
-<p align="center">
 
-  <img src="art/ios_list.png" width="250" alt="iOS List"/>
-
-  <img src="art/ios_detail.png" width="250" alt="iOS Detail"/>)\
-
-</p>
+| List | Detail |
+|:----:|:------:|
+| <img src="art/ios_list.png" width="250" alt="iOS List"/> | <img src="art/ios_detail.png" width="250" alt="iOS Detail"/> |
 
 ### Desktop
-<p align="center">
-  <img src="art/desktop_detail.png" width="400" alt="Desktop List"/> 
-</p>
+
+| Screenshot |
+|:----------:|
+| <img src="art/desktop_detail.png" width="400" alt="Desktop List"/> |
+
 
 ---
 
@@ -365,123 +350,6 @@ sequenceDiagram
 | [Kotlinx Coroutines Test](https://github.com/Kotlin/kotlinx.coroutines) | 1.10.2 | Coroutine testing utilities |
 | [Compose UI Test](https://developer.android.com/jetpack/compose/testing) | Latest | UI testing for Compose |
 | [JUnit 4](https://junit.org/junit4/) | Latest | Unit testing framework |
-
----
-
-## 📁 Project Structure
-
-```
-PokePedia/
-│
-├── composeApp/                              # Main application module
-│   ├── src/
-│   │   ├── commonMain/kotlin/              # Shared code for all platforms
-│   │   │   └── com/thesomeshkumar/pokepedia/
-│   │   │       │
-│   │   │       ├── app/                    # Application entry point
-│   │   │       │   ├── App.kt              # Main Composable app
-│   │   │       │   └── navigation/         # Navigation setup
-│   │   │       │       ├── Routes.kt       # Screen routes
-│   │   │       │       └── NavigationExtensions.kt
-│   │   │       │
-│   │   │       ├── core/                   # Core utilities (shared)
-│   │   │       │   ├── data/
-│   │   │       │   │   ├── HttpClientFactory.kt      # Ktor client setup
-│   │   │       │   │   └── HttpClientExt.kt          # HTTP extensions
-│   │   │       │   ├── domain/
-│   │   │       │   │   ├── Result.kt       # Result wrapper for success/error
-│   │   │       │   │   ├── Error.kt        # Base error interface
-│   │   │       │   │   └── DataError.kt    # Data layer errors
-│   │   │       │   └── presentation/
-│   │   │       │       ├── UiText.kt       # Localized string wrapper
-│   │   │       │       ├── PulseAnimation.kt         # Reusable animations
-│   │   │       │       └── DataErrorToStringResource.kt
-│   │   │       │
-│   │   │       ├── pokemon/                # Pokémon feature module
-│   │   │       │   │
-│   │   │       │   ├── data/               # Data Layer
-│   │   │       │   │   ├── database/
-│   │   │       │   │   │   ├── PokemonDatabase.kt   # Room database
-│   │   │       │   │   │   ├── PokemonDao.kt        # Database queries
-│   │   │       │   │   │   ├── PokemonEntity.kt     # Database entity
-│   │   │       │   │   │   └── PokemonConstructor.kt
-│   │   │       │   │   ├── dto/
-│   │   │       │   │   │   └── PokemonResponse.kt   # API response models
-│   │   │       │   │   ├── mappers/
-│   │   │       │   │   │   ├── PokemonMappers.kt    # DTO to Domain
-│   │   │       │   │   │   └── PokemonEntityMappers.kt
-│   │   │       │   │   ├── network/
-│   │   │       │   │   │   ├── RemoteDataSource.kt  # API interface
-│   │   │       │   │   │   └── PokemonRemoteDataSource.kt
-│   │   │       │   │   └── repository/
-│   │   │       │   │       └── DefaultPokemonRepository.kt
-│   │   │       │   │
-│   │   │       │   ├── domain/             # Domain Layer
-│   │   │       │   │   ├── Pokemon.kt      # Core Pokemon entity
-│   │   │       │   │   └── PokemonRepository.kt     # Repository interface
-│   │   │       │   │
-│   │   │       │   └── presentation/       # Presentation Layer
-│   │   │       │       ├── pokemon_list/
-│   │   │       │       │   ├── PokemonListScreen.kt
-│   │   │       │       │   ├── PokemonListViewModel.kt
-│   │   │       │       │   ├── PokemonListState.kt
-│   │   │       │       │   └── PokemonListAction.kt
-│   │   │       │       └── pokemon_detail/
-│   │   │       │           ├── PokemonDetailScreen.kt
-│   │   │       │           ├── PokemonDetailViewModel.kt
-│   │   │       │           ├── PokemonDetailState.kt
-│   │   │       │           └── PokemonDetailAction.kt
-│   │   │       │
-│   │   │       ├── di/                     # Dependency Injection
-│   │   │       │   ├── initKoin.kt         # Koin initialization
-│   │   │       │   └── PokemonModule.kt    # DI modules
-│   │   │       │
-│   │   │       └── theme/                  # App theming
-│   │   │           ├── Theme.kt
-│   │   │           └── Color.kt
-│   │   │
-│   │   ├── androidMain/                    # Android-specific code
-│   │   │   ├── kotlin/
-│   │   │   │   └── com/thesomeshkumar/pokepedia/
-│   │   │   │       ├── MainActivity.kt
-│   │   │   │       └── PokePediaApplication.kt
-│   │   │   ├── AndroidManifest.xml
-│   │   │   └── res/                        # Android resources
-│   │   │
-│   │   ├── iosMain/                        # iOS-specific code
-│   │   │   └── kotlin/
-│   │   │       └── com/thesomeshkumar/pokepedia/
-│   │   │           └── MainViewController.kt
-│   │   │
-│   │   ├── jvmMain/                        # Desktop-specific code
-│   │   │   └── kotlin/
-│   │   │       └── com/thesomeshkumar/pokepedia/
-│   │   │           └── main.kt
-│   │   │
-│   │   └── commonTest/                     # Shared tests
-│   │       └── kotlin/
-│   │
-│   ├── build.gradle.kts                    # Module build configuration
-│   └── schemas/                            # Room database schemas
-│
-├── iosApp/                                 # iOS application wrapper
-│   ├── iosApp/
-│   │   ├── iosApp.swift
-│   │   ├── Info.plist
-│   │   └── Assets.xcassets/
-│   └── iosApp.xcodeproj/
-│
-├── gradle/
-│   ├── libs.versions.toml                  # Centralized version catalog
-│   └── wrapper/
-│
-├── build.gradle.kts                        # Root build configuration
-├── settings.gradle.kts                     # Project settings
-├── gradle.properties                       # Gradle properties
-├── ARCHITECTURE.md                         # Detailed architecture docs
-├── LICENSE                                 # MIT License
-└── README.MD                               # This file
-```
 
 ---
 
