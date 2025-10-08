@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -241,59 +242,134 @@ private fun PokemonCard(
     imageLoader: ImageLoader,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = pokemon.primaryType?.let {
+        parseColorHex(it.colorHex)
+    } ?: MaterialTheme.colorScheme.primary
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Pokemon Image
+        Box {
+            // Gradient background
             Box(
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .fillMaxSize()
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                primaryColor.copy(alpha = 0.1f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
+            
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                AsyncImage(
-                    model = pokemon.sprites.primaryImage,
-                    contentDescription = pokemon.formattedName,
-                    imageLoader = imageLoader,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Pokemon Info
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
+                // Pokemon Image with gradient glow
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
                 ) {
-                    Text(
-                        text = pokemon.pokemonNumber,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    // Gradient glow behind image
+                    Box(
+                        modifier = Modifier
+                            .size(90.dp)
+                            .clip(CircleShape)
+                            .background(
+                                Brush.radialGradient(
+                                    colors = listOf(
+                                        primaryColor.copy(alpha = 0.3f),
+                                        Color.Transparent
+                                    )
+                                )
+                            )
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = pokemon.formattedName,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    // Image
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.Center)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.5f))
+                    ) {
+                        AsyncImage(
+                            model = pokemon.sprites.primaryImage,
+                            contentDescription = pokemon.formattedName,
+                            imageLoader = imageLoader,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
 
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Pokemon Info
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    // Number badge
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(primaryColor.copy(alpha = 0.15f))
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = pokemon.pokemonNumber,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = primaryColor,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = pokemon.formattedName,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = primaryColor
+                    )
+                    
+                    // Types
+                    if (pokemon.types.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            pokemon.types.take(2).forEach { type ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(parseColorHex(type.colorHex).copy(alpha = 0.8f))
+                                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = type.displayName,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -16,7 +16,8 @@ data class Pokemon(
     val types: List<PokemonType>,
     val abilities: List<PokemonAbility>,
     val species: PokemonSpecies? = null,
-    val description: String = ""
+    val description: String = "",
+    val evolutionChain: List<EvolutionStage> = emptyList()
 ) {
     val heightInMeters: String
         get() = "${(height / 10.0)} m"
@@ -136,5 +137,56 @@ data class PokemonSpecies(
     val captureRate: Int = 0,
     val baseHappiness: Int = 0,
     val growthRate: String = "",
-    val habitat: String? = null
-)
+    val habitat: String? = null,
+    val eggGroups: List<String> = emptyList(),
+    val genderRate: Int = -1,
+    val generation: String = ""
+) {
+    val genderRatio: String
+        get() = when (genderRate) {
+            -1 -> "Genderless"
+            0 -> "100% Male"
+            8 -> "100% Female"
+            else -> {
+                val femalePercent = (genderRate / 8.0 * 100).toInt()
+                val malePercent = 100 - femalePercent
+                "$malePercent% ♂  $femalePercent% ♀"
+            }
+        }
+
+    val formattedHabitat: String
+        get() = habitat?.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() } ?: "Unknown"
+
+    val formattedGrowthRate: String
+        get() = growthRate.replace("-", " ").split(" ").joinToString(" ") { word ->
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        }
+
+    val formattedGeneration: String
+        get() = generation.replace("generation-", "Gen ").uppercase()
+}
+
+data class EvolutionStage(
+    val pokemonId: Int,
+    val pokemonName: String,
+    val minLevel: Int?,
+    val trigger: String,
+    val item: String?
+) {
+    val formattedName: String
+        get() = pokemonName.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+
+    val imageUrl: String
+        get() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
+
+    val evolutionMethod: String
+        get() = when {
+            minLevel != null -> "Level $minLevel"
+            item != null -> item.replace("-", " ").split(" ").joinToString(" ") { 
+                it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } 
+            }
+            trigger == "trade" -> "Trade"
+            trigger == "use-item" -> "Use Item"
+            else -> trigger.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        }
+}

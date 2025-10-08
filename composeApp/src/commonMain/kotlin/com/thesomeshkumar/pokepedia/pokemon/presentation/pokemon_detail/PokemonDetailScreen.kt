@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -206,6 +208,31 @@ private fun PokemonContent(
             item {
                 AbilitiesSection(abilities = pokemon.abilities)
             }
+
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
+
+        // Evolution Chain Section
+        if (pokemon.evolutionChain.isNotEmpty()) {
+            item {
+                EvolutionChainSection(
+                    evolutionChain = pokemon.evolutionChain,
+                    imageLoader = imageLoader
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
+
+        // Species/Breeding Info Section
+        pokemon.species?.let { species ->
+            item {
+                SpeciesInfoSection(species = species)
+            }
         }
     }
 }
@@ -279,42 +306,71 @@ private fun BasicInfoSection(
     pokemon: PokemonUI,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = pokemon.primaryType?.let {
+        parseColorHex(it.colorHex)
+    } ?: MaterialTheme.colorScheme.primary
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+        )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "Basic Information",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+        Box {
+            // Gradient overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                primaryColor.copy(alpha = 0.7f),
+                                primaryColor.copy(alpha = 0.3f)
+                            )
+                        )
+                    )
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            
+            Column(
+                modifier = Modifier.padding(20.dp)
             ) {
-                InfoItem(
-                    label = "Height",
-                    value = pokemon.heightInMeters,
-                    modifier = Modifier.weight(1f)
+                Text(
+                    text = "Basic Information",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryColor
                 )
-                InfoItem(
-                    label = "Weight",
-                    value = pokemon.weightInKilograms,
-                    modifier = Modifier.weight(1f)
-                )
-                InfoItem(
-                    label = "Base XP",
-                    value = pokemon.baseExperience.toString(),
-                    modifier = Modifier.weight(1f)
-                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    InfoItem(
+                        label = "Height",
+                        value = pokemon.heightInMeters,
+                        color = primaryColor,
+                        modifier = Modifier.weight(1f)
+                    )
+                    InfoItem(
+                        label = "Weight",
+                        value = pokemon.weightInKilograms,
+                        color = primaryColor,
+                        modifier = Modifier.weight(1f)
+                    )
+                    InfoItem(
+                        label = "Base XP",
+                        value = pokemon.baseExperience.toString(),
+                        color = primaryColor,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
         }
     }
@@ -329,18 +385,36 @@ private fun DescriptionSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+        )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(20.dp)
         ) {
-            Text(
-                text = "Description",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(4.dp, 24.dp)
+                        .background(
+                            MaterialTheme.colorScheme.secondary,
+                            RoundedCornerShape(2.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Description",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = description,
@@ -360,16 +434,34 @@ private fun StatsSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f)
+        )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(20.dp)
         ) {
-            Text(
-                text = "Stats",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(4.dp, 24.dp)
+                        .background(
+                            MaterialTheme.colorScheme.tertiary,
+                            RoundedCornerShape(2.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Stats",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -390,21 +482,39 @@ private fun AbilitiesSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+        )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(20.dp)
         ) {
-            Text(
-                text = "Abilities",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(4.dp, 24.dp)
+                        .background(
+                            MaterialTheme.colorScheme.primary,
+                            RoundedCornerShape(2.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Abilities",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(abilities) { ability ->
                     AbilityChip(ability = ability)
@@ -418,6 +528,7 @@ private fun AbilitiesSection(
 private fun InfoItem(
     label: String,
     value: String,
+    color: Color,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -428,7 +539,8 @@ private fun InfoItem(
             text = value,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = color
         )
         Text(
             text = label,
@@ -450,6 +562,13 @@ private fun StatBar(
         label = "stat_progress"
     )
 
+    val statColor = when {
+        stat.baseStat >= 100 -> Color(0xFF4CAF50)
+        stat.baseStat >= 70 -> Color(0xFF2196F3)
+        stat.baseStat >= 50 -> Color(0xFFFFC107)
+        else -> Color(0xFFFF5722)
+    }
+
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -460,22 +579,45 @@ private fun StatBar(
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
-            Text(
-                text = stat.baseStat.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(statColor.copy(alpha = 0.15f))
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = stat.baseStat.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = statColor
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        LinearProgressIndicator(
-            progress = { animatedProgress },
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp))
-        )
+                .height(10.dp)
+                .clip(RoundedCornerShape(5.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(animatedProgress)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                statColor,
+                                statColor.copy(alpha = 0.7f)
+                            )
+                        )
+                    )
+            )
+        }
     }
 }
 
@@ -484,18 +626,27 @@ private fun TypeChip(
     type: PokemonTypeUI,
     modifier: Modifier = Modifier
 ) {
+    val typeColor = parseColorHex(type.colorHex)
+    
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(parseColorHex(type.colorHex))
+            .clip(RoundedCornerShape(20.dp))
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        typeColor,
+                        typeColor.copy(alpha = 0.85f)
+                    )
+                )
+            )
             .padding(
-                horizontal = 16.dp,
-                vertical = 8.dp
+                horizontal = 20.dp,
+                vertical = 10.dp
             )
     ) {
         Text(
             text = type.displayName,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelLarge,
             color = Color.White,
             fontWeight = FontWeight.Bold
         )
@@ -515,18 +666,25 @@ private fun AbilityChip(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(chipColor)
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        chipColor,
+                        chipColor.copy(alpha = 0.8f)
+                    )
+                )
+            )
             .padding(
-                horizontal = 12.dp,
-                vertical = 6.dp
+                horizontal = 16.dp,
+                vertical = 10.dp
             )
     ) {
         Text(
-            text = if (ability.isHidden) "${ability.displayName} (Hidden)" else ability.displayName,
-            style = MaterialTheme.typography.labelSmall,
+            text = if (ability.isHidden) "${ability.displayName} ✨" else ability.displayName,
+            style = MaterialTheme.typography.labelMedium,
             color = Color.White,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
@@ -574,5 +732,323 @@ private fun ErrorContent(
         Button(onClick = onRetryClick) {
             Text("Retry")
         }
+    }
+}
+
+@Composable
+private fun EvolutionChainSection(
+    evolutionChain: List<com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.EvolutionStageUI>,
+    imageLoader: ImageLoader,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF6C63FF).copy(alpha = 0.1f)
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(4.dp, 24.dp)
+                        .background(
+                            Color(0xFF6C63FF),
+                            RoundedCornerShape(2.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Evolution Chain",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF6C63FF)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                evolutionChain.forEachIndexed { index, evolution ->
+                    // Evolution Stage Card
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(90.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    Brush.radialGradient(
+                                        colors = listOf(
+                                            Color(0xFF6C63FF).copy(alpha = 0.2f),
+                                            Color.Transparent
+                                        )
+                                    )
+                                )
+                        ) {
+                            AsyncImage(
+                                model = evolution.imageUrl,
+                                contentDescription = evolution.formattedName,
+                                imageLoader = imageLoader,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .align(Alignment.Center)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = evolution.formattedName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+
+                        if (evolution.minLevel != null || evolution.item != null) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color(0xFF6C63FF).copy(alpha = 0.15f))
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = evolution.evolutionMethod,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xFF6C63FF),
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
+                    }
+
+                    // Arrow between evolutions
+                    if (index < evolutionChain.size - 1) {
+                        Text(
+                            text = "→",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color(0xFF6C63FF).copy(alpha = 0.6f),
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SpeciesInfoSection(
+    species: com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonSpeciesUI,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFF6B9D).copy(alpha = 0.1f)
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(4.dp, 24.dp)
+                        .background(
+                            Color(0xFFFF6B9D),
+                            RoundedCornerShape(2.dp)
+                        )
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Species Information",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFF6B9D)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Classification badges
+            if (species.isLegendary || species.isMythical) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    if (species.isLegendary) {
+                        ClassificationBadge(text = "✨ Legendary", color = Color(0xFFFFD700))
+                    }
+                    if (species.isMythical) {
+                        ClassificationBadge(text = "🌟 Mythical", color = Color(0xFFFF69B4))
+                    }
+                }
+            }
+
+            // Generation
+            SpeciesInfoRow(
+                label = "Generation",
+                value = species.generation
+            )
+
+            // Habitat
+            if (species.habitat.isNotEmpty()) {
+                SpeciesInfoRow(
+                    label = "Habitat",
+                    value = species.habitat
+                )
+            }
+
+            // Capture Rate
+            SpeciesInfoRow(
+                label = "Capture Rate",
+                value = "${species.captureRate}/255"
+            )
+
+            // Base Happiness
+            SpeciesInfoRow(
+                label = "Base Happiness",
+                value = "${species.baseHappiness}/255"
+            )
+
+            // Growth Rate
+            SpeciesInfoRow(
+                label = "Growth Rate",
+                value = species.growthRate
+            )
+
+            // Gender Ratio
+            SpeciesInfoRow(
+                label = "Gender Ratio",
+                value = species.genderRatio
+            )
+
+            // Egg Groups
+            if (species.eggGroups.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "Egg Groups",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFF6B9D)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(species.eggGroups) { eggGroup ->
+                        EggGroupChip(eggGroup = eggGroup)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ClassificationBadge(
+    text: String,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        color.copy(alpha = 0.3f),
+                        color.copy(alpha = 0.15f)
+                    )
+                )
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            color = color,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun SpeciesInfoRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
+private fun EggGroupChip(
+    eggGroup: String,
+    modifier: Modifier = Modifier
+) {
+    val formattedEggGroup = eggGroup.replace("-", " ").split(" ").joinToString(" ") { word ->
+        word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    }
+
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        Color(0xFFFF6B9D).copy(alpha = 0.2f),
+                        Color(0xFFFF6B9D).copy(alpha = 0.1f)
+                    )
+                )
+            )
+            .padding(horizontal = 14.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = formattedEggGroup,
+            style = MaterialTheme.typography.labelMedium,
+            color = Color(0xFFFF6B9D),
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }

@@ -122,7 +122,11 @@ data class PokemonSpeciesDetailDTO(
     @SerialName("base_happiness") val baseHappiness: Int,
     @SerialName("growth_rate") val growthRate: GrowthRateDTO,
     @SerialName("habitat") val habitat: HabitatDTO?,
-    @SerialName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntryDTO>
+    @SerialName("flavor_text_entries") val flavorTextEntries: List<FlavorTextEntryDTO>,
+    @SerialName("evolution_chain") val evolutionChain: EvolutionChainLinkDTO?,
+    @SerialName("egg_groups") val eggGroups: List<EggGroupDTO>,
+    @SerialName("gender_rate") val genderRate: Int,
+    @SerialName("generation") val generation: GenerationDTO
 )
 
 @Serializable
@@ -152,6 +156,72 @@ data class LanguageDTO(
 
 @Serializable
 data class VersionDTO(
+    @SerialName("name") val name: String,
+    @SerialName("url") val url: String
+)
+
+@Serializable
+data class EvolutionChainLinkDTO(
+    @SerialName("url") val url: String
+) {
+    val evolutionChainId: Int
+        get() = url
+            .trimEnd('/')
+            .split('/')
+            .last()
+            .toInt()
+}
+
+@Serializable
+data class EvolutionChainDTO(
+    @SerialName("id") val id: Int,
+    @SerialName("chain") val chain: ChainLinkDTO
+)
+
+@Serializable
+data class ChainLinkDTO(
+    @SerialName("species") val species: SpeciesDTO,
+    @SerialName("evolves_to") val evolvesTo: List<ChainLinkDTO>,
+    @SerialName("evolution_details") val evolutionDetails: List<EvolutionDetailDTO>
+)
+
+@Serializable
+data class EvolutionDetailDTO(
+    @SerialName("min_level") val minLevel: Int?,
+    @SerialName("trigger") val trigger: TriggerDTO,
+    @SerialName("item") val item: ItemDTO?,
+    @SerialName("min_happiness") val minHappiness: Int?,
+    @SerialName("min_beauty") val minBeauty: Int?,
+    @SerialName("min_affection") val minAffection: Int?,
+    @SerialName("needs_overworld_rain") val needsOverworldRain: Boolean,
+    @SerialName("party_species") val partySpecies: SpeciesDTO?,
+    @SerialName("party_type") val partyType: TypeInfoDTO?,
+    @SerialName("relative_physical_stats") val relativePhysicalStats: Int?,
+    @SerialName("time_of_day") val timeOfDay: String,
+    @SerialName("trade_species") val tradeSpecies: SpeciesDTO?,
+    @SerialName("turn_upside_down") val turnUpsideDown: Boolean
+)
+
+@Serializable
+data class TriggerDTO(
+    @SerialName("name") val name: String,
+    @SerialName("url") val url: String
+)
+
+@Serializable
+data class ItemDTO(
+    @SerialName("name") val name: String,
+    @SerialName("url") val url: String
+)
+
+@Serializable
+data class EggGroupDTO(
+    @SerialName("name") val name: String,
+    @SerialName("url") val url: String
+)
+
+@Serializable
+data class GenerationDTO(
     @SerialName("name") val name: String,
     @SerialName("url") val url: String
 )

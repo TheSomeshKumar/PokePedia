@@ -2,6 +2,7 @@ package com.thesomeshkumar.pokepedia.pokemon.data.network
 
 import com.thesomeshkumar.pokepedia.core.domain.DataError
 import com.thesomeshkumar.pokepedia.core.domain.Result
+import com.thesomeshkumar.pokepedia.pokemon.data.dto.EvolutionChainDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonDetailDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonListResponse
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonSpeciesDetailDTO
@@ -20,4 +21,5 @@ interface RemoteDataSource {
     suspend fun getPokemonDetails(pokemonName: String): Result<PokemonDetailDTO, DataError.Remote>
     suspend fun getPokemonSpecies(pokemonId: Int): Result<PokemonSpeciesDetailDTO, DataError.Remote>
     suspend fun getPokemonSpecies(pokemonName: String): Result<PokemonSpeciesDetailDTO, DataError.Remote>
+    suspend fun getEvolutionChain(evolutionChainId: Int): Result<EvolutionChainDTO, DataError.Remote>
 }

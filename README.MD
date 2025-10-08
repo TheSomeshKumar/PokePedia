@@ -122,15 +122,7 @@ PokePedia follows **Clean Architecture** principles with a clear separation of c
    - Navigate to the cloned directory and select it
    - Wait for Gradle sync to complete
 
-3. **Configure API Key** (Optional)
-   - Create a `local.properties` file in the root directory
-   - Add your PokéAPI key (if you have one):
-     ```properties
-     API_KEY=your_api_key_here
-     ```
-   - Note: The app works without an API key using public endpoints
-
-4. **Run the application**
+3. **Run the application**
    - **Android**: Select an Android device/emulator and click Run
    - **iOS**: Select an iOS simulator and click Run (requires macOS)
    - **Desktop**: Select "Desktop" and click Run

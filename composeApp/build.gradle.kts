@@ -171,10 +171,10 @@ val localProperties = Properties().apply {
             .use { load(it) }
     }
 }
-val apiKey: String = localProperties.getProperty(
-    "API_KEY",
+/*val apiKey: String = localProperties.getProperty(
+    "SOME_API_KEY",
     ""
-)
+)*/
 
 
 buildConfig {
@@ -182,10 +182,10 @@ buildConfig {
     // https://github.com/gmazzo/gradle-buildconfig-plugin#usage-in-kts
     packageName("com.thesomeshkumar.pokepedia") // You can customize this
 
-    buildConfigField(
-        "API_KEY",
+    /*buildConfigField(
+        "SOME_API_KEY",
         apiKey
-    )
+    )*/
 }
 
 room {

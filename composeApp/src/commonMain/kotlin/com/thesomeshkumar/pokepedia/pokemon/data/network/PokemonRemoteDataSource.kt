@@ -3,6 +3,7 @@ package com.thesomeshkumar.pokepedia.pokemon.data.network
 import com.thesomeshkumar.pokepedia.core.data.safeCall
 import com.thesomeshkumar.pokepedia.core.domain.DataError
 import com.thesomeshkumar.pokepedia.core.domain.Result
+import com.thesomeshkumar.pokepedia.pokemon.data.dto.EvolutionChainDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonDetailDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonListResponse
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonSpeciesDetailDTO
@@ -58,6 +59,12 @@ class PokemonRemoteDataSource(
     override suspend fun getPokemonSpecies(pokemonName: String): Result<PokemonSpeciesDetailDTO, DataError.Remote> {
         return safeCall<PokemonSpeciesDetailDTO> {
             httpClient.get("pokemon-species/$pokemonName")
+        }
+    }
+
+    override suspend fun getEvolutionChain(evolutionChainId: Int): Result<EvolutionChainDTO, DataError.Remote> {
+        return safeCall<EvolutionChainDTO> {
+            httpClient.get("evolution-chain/$evolutionChainId")
         }
     }
 }

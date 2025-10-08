@@ -3,6 +3,7 @@ package com.thesomeshkumar.pokepedia.di
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.network.ktor3.KtorNetworkFetcherFactory
+import coil3.util.DebugLogger
 import com.thesomeshkumar.pokepedia.core.presentation.JvmUrlLauncher
 import com.thesomeshkumar.pokepedia.core.presentation.UrlLauncher
 import com.thesomeshkumar.pokepedia.pokemon.data.database.DatabaseFactory
@@ -30,6 +31,7 @@ actual val platformModule: Module
                 .components {
                     add(KtorNetworkFetcherFactory(httpClient = get<HttpClient>()))
                 }
+                .logger(DebugLogger())
                 .build()
         }
         single<UrlLauncher> { JvmUrlLauncher() }

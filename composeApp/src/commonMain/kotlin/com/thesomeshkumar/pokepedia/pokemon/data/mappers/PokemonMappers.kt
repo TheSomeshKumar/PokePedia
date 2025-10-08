@@ -2,6 +2,8 @@ package com.thesomeshkumar.pokepedia.pokemon.data.mappers
 
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.AbilityInfoDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.AbilitySlotDTO
+import com.thesomeshkumar.pokepedia.pokemon.data.dto.ChainLinkDTO
+import com.thesomeshkumar.pokepedia.pokemon.data.dto.EvolutionChainDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonBasicDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonDetailDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.PokemonSpeciesDetailDTO
@@ -10,6 +12,7 @@ import com.thesomeshkumar.pokepedia.pokemon.data.dto.StatDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.StatInfoDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.TypeInfoDTO
 import com.thesomeshkumar.pokepedia.pokemon.data.dto.TypeSlotDTO
+import com.thesomeshkumar.pokepedia.pokemon.domain.EvolutionStage
 import com.thesomeshkumar.pokepedia.pokemon.domain.Pokemon
 import com.thesomeshkumar.pokepedia.pokemon.domain.PokemonAbility
 import com.thesomeshkumar.pokepedia.pokemon.domain.PokemonSpecies
@@ -22,7 +25,10 @@ import com.thesomeshkumar.pokepedia.pokemon.domain.PokemonType
  * Copyright ©2025 SixFlags. All rights reserved.
  */
 
-fun PokemonDetailDTO.toDomain(speciesDetail: PokemonSpeciesDetailDTO? = null): Pokemon {
+fun PokemonDetailDTO.toDomain(
+    speciesDetail: PokemonSpeciesDetailDTO? = null,
+    evolutionChain: EvolutionChainDTO? = null
+): Pokemon {
     return Pokemon(
         id = id,
         name = name,
@@ -35,7 +41,8 @@ fun PokemonDetailDTO.toDomain(speciesDetail: PokemonSpeciesDetailDTO? = null): P
         types = types.map { it.toDomain() },
         abilities = abilities.map { it.toDomain() },
         species = speciesDetail?.toDomain(),
-        description = speciesDetail?.getEnglishDescription() ?: ""
+        description = speciesDetail?.getEnglishDescription() ?: "",
+        evolutionChain = evolutionChain?.toEvolutionStages() ?: emptyList()
     )
 }
 
@@ -102,7 +109,10 @@ fun PokemonSpeciesDetailDTO.toDomain(): PokemonSpecies {
         captureRate = captureRate,
         baseHappiness = baseHappiness,
         growthRate = growthRate.name,
-        habitat = habitat?.name
+        habitat = habitat?.name,
+        eggGroups = eggGroups.map { it.name },
+        genderRate = genderRate,
+        generation = generation.name
     )
 }
 
@@ -144,4 +154,36 @@ fun PokemonBasicDTO.toDomain(): Pokemon {
         types = emptyList(),
         abilities = emptyList()
     )
+}
+
+fun EvolutionChainDTO.toEvolutionStages(): List<EvolutionStage> {
+    val stages = mutableListOf<EvolutionStage>()
+    
+    fun processChainLink(chainLink: ChainLinkDTO, previousStages: List<EvolutionStage> = emptyList()) {
+        val pokemonId = chainLink.species.url
+            .trimEnd('/')
+            .split('/')
+            .last()
+            .toInt()
+        
+        val evolutionDetail = chainLink.evolutionDetails.firstOrNull()
+        
+        val stage = EvolutionStage(
+            pokemonId = pokemonId,
+            pokemonName = chainLink.species.name,
+            minLevel = evolutionDetail?.minLevel,
+            trigger = evolutionDetail?.trigger?.name ?: "level-up",
+            item = evolutionDetail?.item?.name
+        )
+        
+        stages.add(stage)
+        
+        // Process all evolution branches
+        chainLink.evolvesTo.forEach { nextLink ->
+            processChainLink(nextLink, previousStages + stage)
+        }
+    }
+    
+    processChainLink(chain)
+    return stages
 }

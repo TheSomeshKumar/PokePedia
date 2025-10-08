@@ -8,6 +8,8 @@ import com.thesomeshkumar.pokepedia.pokemon.data.network.RemoteDataSource
 import com.thesomeshkumar.pokepedia.pokemon.domain.PaginatedPokemon
 import com.thesomeshkumar.pokepedia.pokemon.domain.Pokemon
 import com.thesomeshkumar.pokepedia.pokemon.domain.PokemonRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 /**
  * Created by SixFlags on 27 September, 2025.
@@ -46,34 +48,62 @@ class DefaultPokemonRepository(
     }
 
     override suspend fun getPokemonDetails(pokemonId: Int): Result<Pokemon, DataError.Remote> {
-        return when (val pokemonResult = remoteDataSource.getPokemonDetails(pokemonId)) {
-            is Result.Error -> Result.Error(pokemonResult.error)
-            is Result.Success -> {
-                // Get species details for additional information
-                val speciesResult = remoteDataSource.getPokemonSpecies(pokemonId)
-                val speciesData = if (speciesResult is Result.Success) {
-                    speciesResult.data
-                } else null
+        return coroutineScope {
+            // Parallelize independent API calls for better performance
+            val pokemonDeferred = async { remoteDataSource.getPokemonDetails(pokemonId) }
+            val speciesDeferred = async { remoteDataSource.getPokemonSpecies(pokemonId) }
 
-                val pokemon = pokemonResult.data.toDomain(speciesData)
-                Result.Success(pokemon)
+            // Await pokemon details - if it fails, return early
+            val pokemonResult = pokemonDeferred.await()
+            if (pokemonResult is Result.Error) {
+                return@coroutineScope Result.Error(pokemonResult.error)
             }
+
+            // Await species details (non-blocking since it's already running)
+            val speciesResult = speciesDeferred.await()
+            val speciesData = if (speciesResult is Result.Success) {
+                speciesResult.data
+            } else null
+
+            // Get evolution chain (depends on species data, so must be sequential)
+            val evolutionChainData = speciesData?.evolutionChain?.let { chainLink ->
+                val chainResult = remoteDataSource.getEvolutionChain(chainLink.evolutionChainId)
+                if (chainResult is Result.Success) chainResult.data else null
+            }
+
+            val pokemonData = (pokemonResult as Result.Success).data
+            val pokemon = pokemonData.toDomain(speciesData, evolutionChainData)
+            Result.Success(pokemon)
         }
     }
 
     override suspend fun getPokemonDetails(pokemonName: String): Result<Pokemon, DataError.Remote> {
-        return when (val pokemonResult = remoteDataSource.getPokemonDetails(pokemonName)) {
-            is Result.Error -> Result.Error(pokemonResult.error)
-            is Result.Success -> {
-                // Get species details for additional information
-                val speciesResult = remoteDataSource.getPokemonSpecies(pokemonName)
-                val speciesData = if (speciesResult is Result.Success) {
-                    speciesResult.data
-                } else null
+        return coroutineScope {
+            // Parallelize independent API calls for better performance
+            val pokemonDeferred = async { remoteDataSource.getPokemonDetails(pokemonName) }
+            val speciesDeferred = async { remoteDataSource.getPokemonSpecies(pokemonName) }
 
-                val pokemon = pokemonResult.data.toDomain(speciesData)
-                Result.Success(pokemon)
+            // Await pokemon details - if it fails, return early
+            val pokemonResult = pokemonDeferred.await()
+            if (pokemonResult is Result.Error) {
+                return@coroutineScope Result.Error(pokemonResult.error)
             }
+
+            // Await species details (non-blocking since it's already running)
+            val speciesResult = speciesDeferred.await()
+            val speciesData = if (speciesResult is Result.Success) {
+                speciesResult.data
+            } else null
+
+            // Get evolution chain (depends on species data, so must be sequential)
+            val evolutionChainData = speciesData?.evolutionChain?.let { chainLink ->
+                val chainResult = remoteDataSource.getEvolutionChain(chainLink.evolutionChainId)
+                if (chainResult is Result.Success) chainResult.data else null
+            }
+
+            val pokemonData = (pokemonResult as Result.Success).data
+            val pokemon = pokemonData.toDomain(speciesData, evolutionChainData)
+            Result.Success(pokemon)
         }
     }
 

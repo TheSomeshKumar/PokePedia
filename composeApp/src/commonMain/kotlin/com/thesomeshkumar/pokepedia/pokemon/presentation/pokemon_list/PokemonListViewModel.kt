@@ -26,6 +26,12 @@ class PokemonListViewModel(
 
     private var searchJob: Job? = null
     private val limit = 20
+    
+    // Store the full loaded list for in-memory search
+    private var fullPokemonList: List<PokemonUI> = emptyList()
+    
+    // Store pagination state before search to restore it later
+    private var canLoadMoreBeforeSearch: Boolean = true
 
     init {
         handleAction(PokemonListAction.LoadPokemon)
@@ -54,9 +60,12 @@ class PokemonListViewModel(
                     offset = 0
                 )
                 .onSuccess { paginatedPokemon ->
+                    val pokemonList = paginatedPokemon.pokemon.map { it.toUI() }
+                    fullPokemonList = pokemonList // Store the full list for search
+                    
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        pokemonList = paginatedPokemon.pokemon.map { it.toUI() },
+                        pokemonList = pokemonList,
                         currentOffset = paginatedPokemon.offset + paginatedPokemon.pokemon.size,
                         canLoadMore = paginatedPokemon.hasNextPage
                     )
@@ -84,10 +93,13 @@ class PokemonListViewModel(
                 .onSuccess { paginatedPokemon ->
                     val currentList = _state.value.pokemonList
                     val newList = paginatedPokemon.pokemon.map { it.toUI() }
+                    val updatedList = currentList + newList
+                    
+                    fullPokemonList = updatedList // Update the full list for search
 
                     _state.value = _state.value.copy(
                         isLoadingMore = false,
-                        pokemonList = currentList + newList,
+                        pokemonList = updatedList,
                         currentOffset = paginatedPokemon.offset + paginatedPokemon.pokemon.size,
                         canLoadMore = paginatedPokemon.hasNextPage
                     )
@@ -111,6 +123,11 @@ class PokemonListViewModel(
 
     private fun searchPokemon(query: String) {
         searchJob?.cancel()
+        
+        // Save the current pagination state before searching
+        if (_state.value.searchQuery.isEmpty() && query.isNotEmpty()) {
+            canLoadMoreBeforeSearch = _state.value.canLoadMore
+        }
 
         _state.value = _state.value.copy(
             searchQuery = query,
@@ -125,22 +142,18 @@ class PokemonListViewModel(
         searchJob = viewModelScope.launch {
             delay(300) // Debounce search
 
-            pokemonRepository
-                .searchPokemon(query)
-                .onSuccess { searchResults ->
-                    _state.value = _state.value.copy(
-                        isSearching = false,
-                        pokemonList = searchResults.map { it.toUI() },
-                        canLoadMore = false,
-                        errorMessage = null
-                    )
-                }
-                .onError { error ->
-                    _state.value = _state.value.copy(
-                        isSearching = false,
-                        errorMessage = error.toUiText()
-                    )
-                }
+            // Filter the in-memory list instead of querying the database
+            val searchResults = fullPokemonList.filter { pokemon ->
+                pokemon.name.contains(query, ignoreCase = true) ||
+                pokemon.formattedName.contains(query, ignoreCase = true)
+            }
+
+            _state.value = _state.value.copy(
+                isSearching = false,
+                pokemonList = searchResults,
+                canLoadMore = false, // Disable pagination during search
+                errorMessage = null
+            )
         }
     }
 
@@ -148,9 +161,10 @@ class PokemonListViewModel(
         searchJob?.cancel()
         _state.value = _state.value.copy(
             searchQuery = "",
-            isSearching = false
+            isSearching = false,
+            pokemonList = fullPokemonList, // Restore the full list
+            canLoadMore = canLoadMoreBeforeSearch // Restore the pagination state from before search
         )
-        loadPokemon()
     }
 }
 

@@ -15,10 +15,17 @@ actual class DatabaseFactory(
         val appContext = context.applicationContext
         val dbFile = appContext.getDatabasePath(DB_NAME)
 
-        return Room.databaseBuilder(
+        return Room.databaseBuilder<PokemonDatabase>(
             context = appContext,
             name = dbFile.absolutePath
-        )
+        ).apply {
+            // Enable Database Inspector support
+            // Using TRUNCATE mode instead of WAL for better Database Inspector compatibility
+            setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
+            
+            // Fallback to destructive migration for development
+            fallbackToDestructiveMigration(dropAllTables = true)
+        }
     }
 
     companion object {

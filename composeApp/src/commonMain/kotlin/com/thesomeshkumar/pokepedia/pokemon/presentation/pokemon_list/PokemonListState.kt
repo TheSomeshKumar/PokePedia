@@ -30,7 +30,9 @@ data class PokemonUI(
     val abilities: List<PokemonAbilityUI>,
     val isLegendary: Boolean,
     val isMythical: Boolean,
-    val description: String
+    val description: String,
+    val evolutionChain: List<EvolutionStageUI> = emptyList(),
+    val species: PokemonSpeciesUI? = null
 ) {
     val formattedName: String
         get() = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
@@ -93,6 +95,30 @@ data class PokemonAbilityUI(
     val displayName: String
 )
 
+data class EvolutionStageUI(
+    val pokemonId: Int,
+    val pokemonName: String,
+    val formattedName: String,
+    val imageUrl: String,
+    val minLevel: Int?,
+    val trigger: String,
+    val item: String?,
+    val evolutionMethod: String
+)
+
+data class PokemonSpeciesUI(
+    val name: String,
+    val isLegendary: Boolean,
+    val isMythical: Boolean,
+    val captureRate: Int,
+    val baseHappiness: Int,
+    val growthRate: String,
+    val habitat: String,
+    val eggGroups: List<String>,
+    val genderRatio: String,
+    val generation: String
+)
+
 // Mapper functions from Domain to UI
 fun Pokemon.toUI(): PokemonUI {
     return PokemonUI(
@@ -107,7 +133,9 @@ fun Pokemon.toUI(): PokemonUI {
         abilities = abilities.map { it.toUI() },
         isLegendary = isLegendary,
         isMythical = isMythical,
-        description = description
+        description = description,
+        evolutionChain = evolutionChain.map { it.toUI() },
+        species = species?.toUI()
     )
 }
 
@@ -145,5 +173,33 @@ fun com.thesomeshkumar.pokepedia.pokemon.domain.PokemonAbility.toUI(): PokemonAb
         slot = slot,
         name = ability.name,
         displayName = ability.displayName
+    )
+}
+
+fun com.thesomeshkumar.pokepedia.pokemon.domain.EvolutionStage.toUI(): EvolutionStageUI {
+    return EvolutionStageUI(
+        pokemonId = pokemonId,
+        pokemonName = pokemonName,
+        formattedName = formattedName,
+        imageUrl = imageUrl,
+        minLevel = minLevel,
+        trigger = trigger,
+        item = item,
+        evolutionMethod = evolutionMethod
+    )
+}
+
+fun com.thesomeshkumar.pokepedia.pokemon.domain.PokemonSpecies.toUI(): PokemonSpeciesUI {
+    return PokemonSpeciesUI(
+        name = name,
+        isLegendary = isLegendary,
+        isMythical = isMythical,
+        captureRate = captureRate,
+        baseHappiness = baseHappiness,
+        growthRate = formattedGrowthRate,
+        habitat = formattedHabitat,
+        eggGroups = eggGroups,
+        genderRatio = genderRatio,
+        generation = formattedGeneration
     )
 }
