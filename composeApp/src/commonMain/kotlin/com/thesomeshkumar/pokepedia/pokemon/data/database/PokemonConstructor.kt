@@ -3,8 +3,8 @@ package com.thesomeshkumar.pokepedia.pokemon.data.database
 import androidx.room.RoomDatabaseConstructor
 
 /**
- * Created by SixFlags on 28 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 28 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 @Suppress("KotlinNoActualForExpect")

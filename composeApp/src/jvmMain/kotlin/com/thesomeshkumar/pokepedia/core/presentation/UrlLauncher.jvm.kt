@@ -4,8 +4,8 @@ import java.awt.Desktop
 import java.net.URI
 
 /**
- * Created by SixFlags on 23 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 23 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 class JvmUrlLauncher : UrlLauncher {

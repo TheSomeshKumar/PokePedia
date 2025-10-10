@@ -4,8 +4,8 @@ import com.thesomeshkumar.pokepedia.core.presentation.UiText
 import com.thesomeshkumar.pokepedia.pokemon.domain.Pokemon
 
 /**
- * Created by SixFlags on 27 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 27 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 data class PokemonListState(
     val isLoading: Boolean = false,

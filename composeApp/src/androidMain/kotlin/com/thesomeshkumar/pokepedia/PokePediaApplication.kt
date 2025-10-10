@@ -5,8 +5,8 @@ import com.thesomeshkumar.pokepedia.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
 /**
- * Created by SixFlags on 27 July, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 27 July, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 class PokePediaApplication : Application() {
     override fun onCreate() {

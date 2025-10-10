@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 /**
- * Created by SixFlags on 27 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 27 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 @Dao

@@ -16,8 +16,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 /**
- * Created by SixFlags on 26 July, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 26 July, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 object HttpClientFactory {
     fun create(engine: HttpClientEngine): HttpClient {

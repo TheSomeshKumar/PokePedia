@@ -444,7 +444,7 @@ open iosApp/iosApp.xcodeproj
 ### Contribution Guidelines
 
 - Write clean, readable, and maintainable code
-- Follow the project's architecture patterns (see [AGENTS.md](AGENTS.md))
+- Follow the project's architecture patterns (see [ARCHITECTURE.md](ARCHITECTURE.md))
 - Add appropriate comments and documentation
 - Write unit tests for new functionality
 - Ensure backward compatibility

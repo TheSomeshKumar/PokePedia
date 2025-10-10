@@ -21,8 +21,8 @@ import com.thesomeshkumar.pokepedia.pokemon.domain.PokemonStat
 import com.thesomeshkumar.pokepedia.pokemon.domain.PokemonType
 
 /**
- * Created by SixFlags on 27 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 27 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 fun PokemonDetailDTO.toDomain(

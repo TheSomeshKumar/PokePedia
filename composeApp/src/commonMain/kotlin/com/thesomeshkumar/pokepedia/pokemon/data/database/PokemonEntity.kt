@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Created by SixFlags on 27 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 27 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 @Entity(tableName = "pokemon")

@@ -14,8 +14,8 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 /**
- * Created by SixFlags on 27 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 27 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 actual val platformModule: Module

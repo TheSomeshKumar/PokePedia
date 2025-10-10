@@ -5,8 +5,8 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Created by SixFlags on 26 July, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 26 July, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 sealed interface UiText {
     data class DynamicString(val value: String) : UiText

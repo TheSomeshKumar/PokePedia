@@ -4,8 +4,8 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
 /**
- * Created by SixFlags on 25 July, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 25 July, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 fun initKoin(config: KoinAppDeclaration? = null) {

@@ -13,8 +13,8 @@ import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 
 /**
- * Created by SixFlags on 26 July, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 26 July, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 suspend inline fun <reified T> safeCall(
     execute: () -> HttpResponse

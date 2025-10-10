@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 
 /**
- * Created by SixFlags on 23 September, 2025.
- * Copyright ©2025 SixFlags. All rights reserved.
+ * Created by Somesh Kumar on 23 September, 2025.
+ * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
 
 class AndroidUrlLauncher(private val context: Context) : UrlLauncher {
