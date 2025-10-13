@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(
+    ExperimentalKotlinGradlePluginApi::class,
+    ExperimentalComposeLibrary::class
+) @file:Suppress("unused")
 
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -44,6 +47,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kermit)
@@ -68,12 +72,11 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-            implementation(libs.material.icons.extended)
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
-            @OptIn(ExperimentalComposeLibrary::class) implementation(compose.uiTest)
+            implementation(compose.uiTest)
             implementation(libs.kotlinx.coroutines.test)
         }
 
@@ -220,14 +223,16 @@ dependencies {
 }
 
 // Fix KSP task dependencies for Compose resource generation
-tasks.withType<com.google.devtools.ksp.gradle.KspAATask>().configureEach {
-    dependsOn(
-        "generateResourceAccessorsForAndroidDebug",
-        "generateResourceAccessorsForAndroidMain", 
-        "generateActualResourceCollectorsForAndroidMain",
-        "generateComposeResClass",
-        "generateResourceAccessorsForCommonMain",
-        "generateExpectResourceCollectorsForCommonMain",
-        "generateNonAndroidBuildConfig"
-    )
-}
+tasks
+    .withType<com.google.devtools.ksp.gradle.KspAATask>()
+    .configureEach {
+        dependsOn(
+            "generateResourceAccessorsForAndroidDebug",
+            "generateResourceAccessorsForAndroidMain",
+            "generateActualResourceCollectorsForAndroidMain",
+            "generateComposeResClass",
+            "generateResourceAccessorsForCommonMain",
+            "generateExpectResourceCollectorsForCommonMain",
+            "generateNonAndroidBuildConfig"
+        )
+    }
