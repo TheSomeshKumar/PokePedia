@@ -22,9 +22,6 @@ actual val platformModule: Module
         single {
             ImageLoader
                 .Builder(PlatformContext.INSTANCE)
-                .components {
-                    add(KtorNetworkFetcherFactory(httpClient = get<HttpClient>()))
-                }
                 .build()
         }
         single<UrlLauncher> { IOSUrlLauncher() }

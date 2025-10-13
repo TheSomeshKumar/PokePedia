@@ -27,9 +27,6 @@ actual val platformModule: Module
         single {
             ImageLoader
                 .Builder(androidContext())
-                .components {
-                    add(KtorNetworkFetcherFactory(httpClient = get<HttpClient>()))
-                }
                 .build()
         }
         single<UrlLauncher> { AndroidUrlLauncher(androidContext()) }
