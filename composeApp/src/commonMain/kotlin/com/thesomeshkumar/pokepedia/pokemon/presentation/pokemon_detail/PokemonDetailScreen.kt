@@ -1,7 +1,10 @@
 package com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_detail
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +41,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -172,6 +178,12 @@ private fun PokemonContent(
     scrollBehavior: androidx.compose.material3.TopAppBarScrollBehavior,
     modifier: Modifier = Modifier
 ) {
+    var showContent by remember { mutableStateOf(false) }
+    
+    LaunchedEffect(pokemon.id) {
+        showContent = true
+    }
+    
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -180,10 +192,19 @@ private fun PokemonContent(
     ) {
         item {
             // Hero Section
-            PokemonHeroSection(
-                pokemon = pokemon,
-                imageLoader = imageLoader
-            )
+            AnimatedVisibility(
+                visible = showContent,
+                enter = fadeIn(animationSpec = tween(500)) +
+                        slideInVertically(
+                            initialOffsetY = { -100 },
+                            animationSpec = tween(500)
+                        )
+            ) {
+                PokemonHeroSection(
+                    pokemon = pokemon,
+                    imageLoader = imageLoader
+                )
+            }
         }
 
         item {
@@ -192,7 +213,16 @@ private fun PokemonContent(
 
         // Basic Info
         item {
-            BasicInfoSection(pokemon = pokemon)
+            AnimatedVisibility(
+                visible = showContent,
+                enter = fadeIn(animationSpec = tween(500, delayMillis = 100)) +
+                        slideInVertically(
+                            initialOffsetY = { 50 },
+                            animationSpec = tween(500, delayMillis = 100)
+                        )
+            ) {
+                BasicInfoSection(pokemon = pokemon)
+            }
         }
 
         item {
@@ -202,7 +232,16 @@ private fun PokemonContent(
         // Description
         if (pokemon.description.isNotEmpty()) {
             item {
-                DescriptionSection(description = pokemon.description)
+                AnimatedVisibility(
+                    visible = showContent,
+                    enter = fadeIn(animationSpec = tween(500, delayMillis = 200)) +
+                            slideInVertically(
+                                initialOffsetY = { 50 },
+                                animationSpec = tween(500, delayMillis = 200)
+                            )
+                ) {
+                    DescriptionSection(description = pokemon.description)
+                }
             }
 
             item {
@@ -212,7 +251,16 @@ private fun PokemonContent(
 
         // Stats Section
         item {
-            StatsSection(stats = pokemon.stats)
+            AnimatedVisibility(
+                visible = showContent,
+                enter = fadeIn(animationSpec = tween(500, delayMillis = 300)) +
+                        slideInVertically(
+                            initialOffsetY = { 50 },
+                            animationSpec = tween(500, delayMillis = 300)
+                        )
+            ) {
+                StatsSection(stats = pokemon.stats)
+            }
         }
 
         item {
@@ -222,7 +270,16 @@ private fun PokemonContent(
         // Abilities Section
         if (pokemon.abilities.isNotEmpty()) {
             item {
-                AbilitiesSection(abilities = pokemon.abilities)
+                AnimatedVisibility(
+                    visible = showContent,
+                    enter = fadeIn(animationSpec = tween(500, delayMillis = 400)) +
+                            slideInVertically(
+                                initialOffsetY = { 50 },
+                                animationSpec = tween(500, delayMillis = 400)
+                            )
+                ) {
+                    AbilitiesSection(abilities = pokemon.abilities)
+                }
             }
 
             item {
@@ -233,10 +290,19 @@ private fun PokemonContent(
         // Evolution Chain Section
         if (pokemon.evolutionChain.isNotEmpty()) {
             item {
-                EvolutionChainSection(
-                    evolutionChain = pokemon.evolutionChain,
-                    imageLoader = imageLoader
-                )
+                AnimatedVisibility(
+                    visible = showContent,
+                    enter = fadeIn(animationSpec = tween(500, delayMillis = 500)) +
+                            slideInVertically(
+                                initialOffsetY = { 50 },
+                                animationSpec = tween(500, delayMillis = 500)
+                            )
+                ) {
+                    EvolutionChainSection(
+                        evolutionChain = pokemon.evolutionChain,
+                        imageLoader = imageLoader
+                    )
+                }
             }
 
             item {
@@ -247,7 +313,16 @@ private fun PokemonContent(
         // Species/Breeding Info Section
         pokemon.species?.let { species ->
             item {
-                SpeciesInfoSection(species = species)
+                AnimatedVisibility(
+                    visible = showContent,
+                    enter = fadeIn(animationSpec = tween(500, delayMillis = 600)) +
+                            slideInVertically(
+                                initialOffsetY = { 50 },
+                                animationSpec = tween(500, delayMillis = 600)
+                            )
+                ) {
+                    SpeciesInfoSection(species = species)
+                }
             }
         }
     }
