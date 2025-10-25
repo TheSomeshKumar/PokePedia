@@ -61,6 +61,7 @@ import com.thesomeshkumar.pokepedia.pokemon.presentation.components.ErrorContent
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.LoadingContent
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.SearchBar
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.parseColorHex
+import com.thesomeshkumar.pokepedia.theme.AppTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -102,6 +103,7 @@ fun PokemonListContent(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader = koinInject()
 ) {
+    val dimensions = AppTheme.dimensions
     val gridState = rememberLazyGridState()
 
     // Pagination logic - Load more when reaching near the bottom
@@ -137,7 +139,7 @@ fun PokemonListContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(dimensions.spaceLarge)
         )
 
         // Content
@@ -165,9 +167,9 @@ fun PokemonListContent(
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 160.dp),
                         state = gridState,
-                        contentPadding = PaddingValues(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        contentPadding = PaddingValues(dimensions.spaceLarge),
+                        horizontalArrangement = Arrangement.spacedBy(dimensions.spaceMedium),
+                        verticalArrangement = Arrangement.spacedBy(dimensions.spaceMedium)
                     ) {
                         itemsIndexed(
                             items = state.pokemonList,
@@ -186,11 +188,11 @@ fun PokemonListContent(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
+                                        .padding(dimensions.spaceLarge),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     CircularProgressIndicator(
-                                        modifier = Modifier.size(32.dp)
+                                        modifier = Modifier.size(dimensions.iconSizeLarge)
                                     )
                                 }
                             }
@@ -297,6 +299,7 @@ private fun PokemonGridCard(
     imageLoader: ImageLoader,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
     val primaryColor = pokemon.primaryType?.let {
         parseColorHex(it.colorHex)
     } ?: MaterialTheme.colorScheme.primary
@@ -314,7 +317,7 @@ private fun PokemonGridCard(
             defaultElevation = 8.dp,
             pressedElevation = 2.dp
         ),
-        shape = RoundedCornerShape(24.dp),
+        shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
@@ -340,7 +343,7 @@ private fun PokemonGridCard(
             // Decorative circles for depth
             Box(
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(dimensions.imageSizeLarge)
                     .offset(x = (-30).dp, y = (-30).dp)
                     .align(Alignment.TopEnd)
                     .clip(CircleShape)
@@ -350,8 +353,8 @@ private fun PokemonGridCard(
             
             Box(
                 modifier = Modifier
-                    .size(80.dp)
-                    .offset(x = 20.dp, y = 20.dp)
+                    .size(dimensions.imageSizeSmall)
+                    .offset(x = dimensions.spaceExtraLarge, y = dimensions.spaceExtraLarge)
                     .align(Alignment.BottomStart)
                     .clip(CircleShape)
                     .alpha(0.08f)
@@ -361,7 +364,7 @@ private fun PokemonGridCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(dimensions.spaceLarge),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Number badge
@@ -370,11 +373,14 @@ private fun PokemonGridCard(
                         .align(Alignment.Start)
                         .shadow(
                             elevation = 4.dp,
-                            shape = RoundedCornerShape(12.dp)
+                            shape = MaterialTheme.shapes.medium
                         )
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(MaterialTheme.shapes.medium)
                         .background(Color.White)
-                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                        .padding(
+                            horizontal = dimensions.chipPaddingVertical,
+                            vertical = dimensions.spaceSmall - 2.dp
+                        )
                 ) {
                     Text(
                         text = pokemon.pokemonNumber,
@@ -385,7 +391,7 @@ private fun PokemonGridCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceExtraSmall))
 
                 // Pokemon Image with 3D effect
                 Box(
@@ -398,7 +404,7 @@ private fun PokemonGridCard(
                     Box(
                         modifier = Modifier
                             .size(140.dp)
-                            .offset(y = 8.dp)
+                            .offset(y = dimensions.spaceSmall)
                             .scale(0.9f)
                             .alpha(0.2f)
                             .clip(CircleShape)
@@ -424,7 +430,7 @@ private fun PokemonGridCard(
                     // Main image container
                     Surface(
                         modifier = Modifier
-                            .size(120.dp)
+                            .size(dimensions.imageSizeLarge)
                             .shadow(
                                 elevation = 12.dp,
                                 shape = CircleShape,
@@ -444,13 +450,13 @@ private fun PokemonGridCard(
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(14.dp)
+                                    .padding(dimensions.chipPaddingHorizontal - 2.dp)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
 
                 // Pokemon name
                 Text(
@@ -465,7 +471,7 @@ private fun PokemonGridCard(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceSmall))
 
                 // Types row
                 Row(
@@ -478,12 +484,15 @@ private fun PokemonGridCard(
                             modifier = Modifier
                                 .shadow(
                                     elevation = 4.dp,
-                                    shape = RoundedCornerShape(20.dp),
+                                    shape = MaterialTheme.shapes.large,
                                     spotColor = parseColorHex(type.colorHex).copy(alpha = 0.5f)
                                 )
-                                .clip(RoundedCornerShape(20.dp))
+                                .clip(MaterialTheme.shapes.large)
                                 .background(parseColorHex(type.colorHex))
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                .padding(
+                                    horizontal = dimensions.spaceMedium,
+                                    vertical = dimensions.spaceSmall - 2.dp
+                                )
                         ) {
                             Text(
                                 text = type.displayName,
@@ -495,7 +504,7 @@ private fun PokemonGridCard(
                         }
                         
                         if (pokemon.types.size > 1 && type != pokemon.types.last()) {
-                            Spacer(modifier = Modifier.width(6.dp))
+                            Spacer(modifier = Modifier.width(dimensions.spaceSmall - 2.dp))
                         }
                     }
                 }
@@ -508,8 +517,10 @@ private fun PokemonGridCard(
 private fun EmptyContent(
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(dimensions.spaceLarge),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -517,7 +528,7 @@ private fun EmptyContent(
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(dimensions.spaceSmall))
         Text(
             text = stringResource(Res.string.adjust_search_query),
             style = MaterialTheme.typography.bodyLarge,

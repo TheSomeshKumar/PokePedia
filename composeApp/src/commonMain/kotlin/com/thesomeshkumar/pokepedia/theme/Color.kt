@@ -78,3 +78,51 @@ internal val SurfaceContainerLowDark = Color(0xFF1A1C1C)
 internal val SurfaceContainerDark = Color(0xFF1E2020)
 internal val SurfaceContainerHighDark = Color(0xFF282A2B)
 internal val SurfaceContainerHighestDark = Color(0xFF333535)
+
+// Custom semantic colors for Pokemon-specific UI elements
+// Evolution chain colors
+internal val EvolutionPurple = Color(0xFF6C63FF)
+internal val EvolutionPurpleLight = Color(0xFF8B84FF)
+
+// Species/Breeding info colors
+internal val SpeciesPink = Color(0xFFFF6B9D)
+internal val SpeciesPinkLight = Color(0xFFFF8FB3)
+
+// Legendary/Mythical badge colors
+internal val LegendaryGold = Color(0xFFFFD700)
+internal val MythicalPink = Color(0xFFFF69B4)
+
+// Stat bar colors
+internal val StatExcellent = Color(0xFF4CAF50)  // >= 100
+internal val StatGood = Color(0xFF2196F3)       // >= 70
+internal val StatAverage = Color(0xFFFFC107)    // >= 50
+internal val StatLow = Color(0xFFFF5722)        // < 50
+
+/**
+ * Extended color scheme for Pokemon-specific UI elements
+ */
+data class PokemonColorScheme(
+    val evolutionPrimary: Color,
+    val evolutionSecondary: Color,
+    val speciesPrimary: Color,
+    val speciesSecondary: Color,
+    val legendaryBadge: Color,
+    val mythicalBadge: Color,
+    val statExcellent: Color,
+    val statGood: Color,
+    val statAverage: Color,
+    val statLow: Color
+)
+
+internal val pokemonColors = PokemonColorScheme(
+    evolutionPrimary = EvolutionPurple,
+    evolutionSecondary = EvolutionPurpleLight,
+    speciesPrimary = SpeciesPink,
+    speciesSecondary = SpeciesPinkLight,
+    legendaryBadge = LegendaryGold,
+    mythicalBadge = MythicalPink,
+    statExcellent = StatExcellent,
+    statGood = StatGood,
+    statAverage = StatAverage,
+    statLow = StatLow
+)

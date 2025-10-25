@@ -20,10 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonStatUI
+import com.thesomeshkumar.pokepedia.theme.AppTheme
 
 @Composable
 fun StatBar(
@@ -36,11 +35,14 @@ fun StatBar(
         label = "stat_progress"
     )
 
+    val pokemonColors = AppTheme.pokemonColors
+    val dimensions = AppTheme.dimensions
+    
     val statColor = when {
-        stat.baseStat >= 100 -> Color(0xFF4CAF50)
-        stat.baseStat >= 70 -> Color(0xFF2196F3)
-        stat.baseStat >= 50 -> Color(0xFFFFC107)
-        else -> Color(0xFFFF5722)
+        stat.baseStat >= 100 -> pokemonColors.statExcellent
+        stat.baseStat >= 70 -> pokemonColors.statGood
+        stat.baseStat >= 50 -> pokemonColors.statAverage
+        else -> pokemonColors.statLow
     }
 
     Column(modifier = modifier) {
@@ -55,9 +57,12 @@ fun StatBar(
             )
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(MaterialTheme.shapes.small)
                     .background(statColor.copy(alpha = 0.15f))
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    .padding(
+                        horizontal = dimensions.spaceSmall,
+                        vertical = dimensions.spaceExtraSmall / 2
+                    )
             ) {
                 Text(
                     text = stat.baseStat.toString(),
@@ -68,20 +73,20 @@ fun StatBar(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(dimensions.spaceSmall))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(10.dp)
-                .clip(RoundedCornerShape(5.dp))
+                .height(dimensions.progressBarHeight)
+                .clip(RoundedCornerShape(dimensions.progressBarCornerRadius))
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(animatedProgress)
-                    .clip(RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(dimensions.progressBarCornerRadius))
                     .background(
                         Brush.horizontalGradient(
                             colors = listOf(

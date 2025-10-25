@@ -63,6 +63,7 @@ import com.thesomeshkumar.pokepedia.pokemon.presentation.components.parseColorHe
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonStatUI
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonTypeUI
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonUI
+import com.thesomeshkumar.pokepedia.theme.AppTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -197,6 +198,7 @@ private fun PokemonContent(
     onNavigateToPokemon: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
     var showContent by remember { mutableStateOf(false) }
     
     LaunchedEffect(pokemon.id) {
@@ -207,7 +209,7 @@ private fun PokemonContent(
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        contentPadding = PaddingValues(bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = dimensions.spaceLarge)
     ) {
         item {
             // Hero Section
@@ -227,7 +229,7 @@ private fun PokemonContent(
         }
 
         item {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceXXLarge))
         }
 
         // Basic Info
@@ -245,7 +247,7 @@ private fun PokemonContent(
         }
 
         item {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceXXLarge))
         }
 
         // Description
@@ -264,7 +266,7 @@ private fun PokemonContent(
             }
 
             item {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceXXLarge))
             }
         }
 
@@ -283,7 +285,7 @@ private fun PokemonContent(
         }
 
         item {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceXXLarge))
         }
 
         // Abilities Section
@@ -302,7 +304,7 @@ private fun PokemonContent(
             }
 
             item {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceXXLarge))
             }
         }
 
@@ -326,7 +328,7 @@ private fun PokemonContent(
             }
 
             item {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceXXLarge))
             }
         }
 
@@ -357,11 +359,12 @@ private fun PokemonHeroSection(
     val primaryColor = pokemon.primaryType?.let {
         parseColorHex(it.colorHex)
     } ?: MaterialTheme.colorScheme.primary
+    val dimensions = AppTheme.dimensions
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(dimensions.heroSectionHeight)
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
@@ -374,7 +377,7 @@ private fun PokemonHeroSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 80.dp),
+                .padding(top = dimensions.heroTopPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Pokemon Number
@@ -385,7 +388,7 @@ private fun PokemonHeroSection(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
             // Pokemon Image
             AsyncImage(
@@ -394,15 +397,15 @@ private fun PokemonHeroSection(
                 imageLoader = imageLoader,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(dimensions.imageSizeExtraLarge)
                     .clip(CircleShape)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
             // Types
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(dimensions.spaceSmall)
             ) {
                 items(pokemon.types) { type ->
                     TypeChip(type = type)
@@ -420,13 +423,14 @@ private fun BasicInfoSection(
     val primaryColor = pokemon.primaryType?.let {
         parseColorHex(it.colorHex)
     } ?: MaterialTheme.colorScheme.primary
+    val dimensions = AppTheme.dimensions
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = dimensions.spaceLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensions.cardElevation),
+        shape = RoundedCornerShape(dimensions.cardCornerRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
         )
@@ -436,7 +440,7 @@ private fun BasicInfoSection(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp)
+                    .height(dimensions.gradientOverlayHeight)
                     .background(
                         Brush.horizontalGradient(
                             colors = listOf(
@@ -448,7 +452,7 @@ private fun BasicInfoSection(
             )
             
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(dimensions.cardPadding)
             ) {
                 Text(
                     text = stringResource(Res.string.basic_information),
@@ -457,7 +461,7 @@ private fun BasicInfoSection(
                     color = primaryColor
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -492,31 +496,33 @@ private fun DescriptionSection(
     description: String,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = dimensions.spaceLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensions.cardElevation),
+        shape = RoundedCornerShape(dimensions.cardCornerRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(dimensions.cardPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp, 24.dp)
+                        .size(dimensions.badgeIndicatorWidth, dimensions.badgeIndicatorHeight)
                         .background(
                             MaterialTheme.colorScheme.secondary,
-                            RoundedCornerShape(2.dp)
+                            RoundedCornerShape(dimensions.badgeCornerRadius)
                         )
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(dimensions.spaceMedium))
                 Text(
                     text = stringResource(Res.string.description_section),
                     style = MaterialTheme.typography.titleMedium,
@@ -525,7 +531,7 @@ private fun DescriptionSection(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceMedium))
 
             Text(
                 text = description,
@@ -541,31 +547,33 @@ private fun StatsSection(
     stats: List<PokemonStatUI>,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = dimensions.spaceLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensions.cardElevation),
+        shape = RoundedCornerShape(dimensions.cardCornerRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f)
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(dimensions.cardPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp, 24.dp)
+                        .size(dimensions.badgeIndicatorWidth, dimensions.badgeIndicatorHeight)
                         .background(
                             MaterialTheme.colorScheme.tertiary,
-                            RoundedCornerShape(2.dp)
+                            RoundedCornerShape(dimensions.badgeCornerRadius)
                         )
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(dimensions.spaceMedium))
                 Text(
                     text = stringResource(Res.string.stats_section),
                     style = MaterialTheme.typography.titleMedium,
@@ -574,11 +582,11 @@ private fun StatsSection(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
             stats.forEach { stat ->
                 StatBar(stat = stat)
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
             }
         }
     }
@@ -589,31 +597,33 @@ private fun AbilitiesSection(
     abilities: List<com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonAbilityUI>,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = dimensions.spaceLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensions.cardElevation),
+        shape = RoundedCornerShape(dimensions.cardCornerRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(dimensions.cardPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp, 24.dp)
+                        .size(dimensions.badgeIndicatorWidth, dimensions.badgeIndicatorHeight)
                         .background(
                             MaterialTheme.colorScheme.primary,
-                            RoundedCornerShape(2.dp)
+                            RoundedCornerShape(dimensions.badgeCornerRadius)
                         )
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(dimensions.spaceMedium))
                 Text(
                     text = stringResource(Res.string.abilities_section),
                     style = MaterialTheme.typography.titleMedium,
@@ -622,10 +632,10 @@ private fun AbilitiesSection(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(dimensions.spaceMedium)
             ) {
                 items(abilities) { ability ->
                     AbilityChip(ability = ability)
@@ -642,40 +652,43 @@ private fun EvolutionChainSection(
     onEvolutionClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    val pokemonColors = AppTheme.pokemonColors
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = dimensions.spaceLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensions.cardElevation),
+        shape = RoundedCornerShape(dimensions.cardCornerRadius),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF6C63FF).copy(alpha = 0.1f)
+            containerColor = pokemonColors.evolutionPrimary.copy(alpha = 0.1f)
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(dimensions.cardPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp, 24.dp)
+                        .size(dimensions.badgeIndicatorWidth, dimensions.badgeIndicatorHeight)
                         .background(
-                            Color(0xFF6C63FF),
-                            RoundedCornerShape(2.dp)
+                            pokemonColors.evolutionPrimary,
+                            RoundedCornerShape(dimensions.badgeCornerRadius)
                         )
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(dimensions.spaceMedium))
                 Text(
                     text = stringResource(Res.string.evolution_chain_section),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6C63FF)
+                    color = pokemonColors.evolutionPrimary
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceExtraLarge))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -688,18 +701,18 @@ private fun EvolutionChainSection(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(16.dp))
+                            .clip(MaterialTheme.shapes.medium)
                             .clickable { onEvolutionClick(evolution.pokemonId) }
-                            .padding(8.dp)
+                            .padding(dimensions.spaceSmall)
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(90.dp)
+                                .size(dimensions.imageSizeMedium)
                                 .clip(CircleShape)
                                 .background(
                                     Brush.radialGradient(
                                         colors = listOf(
-                                            Color(0xFF6C63FF).copy(alpha = 0.2f),
+                                            pokemonColors.evolutionPrimary.copy(alpha = 0.2f),
                                             Color.Transparent
                                         )
                                     )
@@ -711,12 +724,12 @@ private fun EvolutionChainSection(
                                 imageLoader = imageLoader,
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
-                                    .size(80.dp)
+                                    .size(dimensions.imageSizeSmall)
                                     .align(Alignment.Center)
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(dimensions.spaceSmall))
 
                         Text(
                             text = evolution.formattedName,
@@ -726,17 +739,20 @@ private fun EvolutionChainSection(
                         )
 
                         if (evolution.minLevel != null || evolution.item != null) {
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(dimensions.spaceExtraSmall))
                             Box(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Color(0xFF6C63FF).copy(alpha = 0.15f))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    .clip(MaterialTheme.shapes.small)
+                                    .background(pokemonColors.evolutionPrimary.copy(alpha = 0.15f))
+                                    .padding(
+                                        horizontal = dimensions.spaceSmall,
+                                        vertical = dimensions.spaceExtraSmall
+                                    )
                             ) {
                                 Text(
                                     text = evolution.evolutionMethod,
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xFF6C63FF),
+                                    color = pokemonColors.evolutionPrimary,
                                     textAlign = TextAlign.Center,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -749,8 +765,8 @@ private fun EvolutionChainSection(
                         Text(
                             text = "→",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Color(0xFF6C63FF).copy(alpha = 0.6f),
-                            modifier = Modifier.padding(horizontal = 4.dp)
+                            color = pokemonColors.evolutionPrimary.copy(alpha = 0.6f),
+                            modifier = Modifier.padding(horizontal = dimensions.spaceExtraSmall)
                         )
                     }
                 }
@@ -764,57 +780,60 @@ private fun SpeciesInfoSection(
     species: com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonSpeciesUI,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    val pokemonColors = AppTheme.pokemonColors
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = dimensions.spaceLarge),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensions.cardElevation),
+        shape = RoundedCornerShape(dimensions.cardCornerRadius),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFF6B9D).copy(alpha = 0.1f)
+            containerColor = pokemonColors.speciesPrimary.copy(alpha = 0.1f)
         )
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(dimensions.cardPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp, 24.dp)
+                        .size(dimensions.badgeIndicatorWidth, dimensions.badgeIndicatorHeight)
                         .background(
-                            Color(0xFFFF6B9D),
-                            RoundedCornerShape(2.dp)
+                            pokemonColors.speciesPrimary,
+                            RoundedCornerShape(dimensions.badgeCornerRadius)
                         )
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(dimensions.spaceMedium))
                 Text(
                     text = stringResource(Res.string.species_information),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFFF6B9D)
+                    color = pokemonColors.speciesPrimary
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
             // Classification badges
             if (species.isLegendary || species.isMythical) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(dimensions.spaceSmall),
+                    modifier = Modifier.padding(bottom = dimensions.spaceLarge)
                 ) {
                     if (species.isLegendary) {
                         ClassificationBadge(
                             text = stringResource(Res.string.legendary_badge), 
-                            color = Color(0xFFFFD700)
+                            color = pokemonColors.legendaryBadge
                         )
                     }
                     if (species.isMythical) {
                         ClassificationBadge(
                             text = stringResource(Res.string.mythical_badge), 
-                            color = Color(0xFFFF69B4)
+                            color = pokemonColors.mythicalBadge
                         )
                     }
                 }
@@ -860,16 +879,16 @@ private fun SpeciesInfoSection(
 
             // Egg Groups
             if (species.eggGroups.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
                 Text(
                     text = stringResource(Res.string.egg_groups_label),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFFF6B9D)
+                    color = pokemonColors.speciesPrimary
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(dimensions.spaceSmall))
                 LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(dimensions.spaceSmall)
                 ) {
                     items(species.eggGroups) { eggGroup ->
                         EggGroupChip(eggGroup = eggGroup)
@@ -886,9 +905,11 @@ private fun ClassificationBadge(
     color: Color,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
+            .clip(MaterialTheme.shapes.medium)
             .background(
                 Brush.horizontalGradient(
                     colors = listOf(
@@ -897,7 +918,10 @@ private fun ClassificationBadge(
                     )
                 )
             )
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(
+                horizontal = dimensions.chipPaddingHorizontal,
+                vertical = dimensions.spaceSmall
+            )
     ) {
         Text(
             text = text,
@@ -914,10 +938,12 @@ private fun SpeciesInfoRow(
     value: String,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = dimensions.spaceExtraSmall),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
@@ -938,28 +964,35 @@ private fun EggGroupChip(
     eggGroup: String,
     modifier: Modifier = Modifier
 ) {
+    val dimensions = AppTheme.dimensions
+    val pokemonColors = AppTheme.pokemonColors
+    
     val formattedEggGroup = eggGroup.replace("-", " ").split(" ").joinToString(" ") { word ->
         word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     }
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(MaterialTheme.shapes.medium)
             .background(
                 Brush.horizontalGradient(
                     colors = listOf(
-                        Color(0xFFFF6B9D).copy(alpha = 0.2f),
-                        Color(0xFFFF6B9D).copy(alpha = 0.1f)
+                        pokemonColors.speciesPrimary.copy(alpha = 0.2f),
+                        pokemonColors.speciesPrimary.copy(alpha = 0.1f)
                     )
                 )
             )
-            .padding(horizontal = 14.dp, vertical = 8.dp)
+            .padding(
+                horizontal = dimensions.chipPaddingHorizontal - 2.dp,
+                vertical = dimensions.spaceSmall
+            )
     ) {
         Text(
             text = formattedEggGroup,
             style = MaterialTheme.typography.labelMedium,
-            color = Color(0xFFFF6B9D),
+            color = pokemonColors.speciesPrimary,
             fontWeight = FontWeight.SemiBold
         )
     }
 }
+

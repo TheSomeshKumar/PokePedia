@@ -2,11 +2,13 @@ package com.thesomeshkumar.pokepedia.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,6 +91,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 internal val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
+internal val LocalPokemonColors = compositionLocalOf { pokemonColors }
 
 @Composable
 internal fun AppTheme(
@@ -97,15 +100,42 @@ internal fun AppTheme(
     val systemIsDark = isSystemInDarkTheme()
     val isDarkState = remember(systemIsDark) { mutableStateOf(systemIsDark) }
     CompositionLocalProvider(
-        LocalThemeIsDark provides isDarkState
+        LocalThemeIsDark provides isDarkState,
+        LocalDimensions provides Dimensions(),
+        LocalPokemonColors provides pokemonColors
     ) {
         val isDark by isDarkState
         SystemAppearance(!isDark)
         MaterialTheme(
             colorScheme = if (isDark) DarkColorScheme else LightColorScheme,
+            shapes = AppShapes,
             content = { Surface(content = content) })
     }
 }
 
+/**
+ * Custom shapes configuration for the app
+ * Uses Material Design 3 shape tokens
+ */
+private val AppShapes = Shapes(
+    // Already provides small, medium, large, extraLarge with appropriate corner radii
+    // Material 3 defaults are perfect for most use cases
+)
+
 @Composable
 internal expect fun SystemAppearance(isDark: Boolean)
+
+/**
+ * Access to app-specific dimensions through MaterialTheme
+ */
+object AppTheme {
+    val dimensions: Dimensions
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalDimensions.current
+
+    val pokemonColors: PokemonColorScheme
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalPokemonColors.current
+}
