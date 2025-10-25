@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -86,6 +87,7 @@ private fun parseColorHex(colorHex: String): Color {
 fun PokemonDetailScreen(
     pokemonId: Int,
     onBackClick: () -> Unit,
+    onNavigateToPokemon: (Int) -> Unit,
     viewModel: PokemonDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -97,7 +99,8 @@ fun PokemonDetailScreen(
     PokemonDetailContent(
         state = state,
         onBackClick = onBackClick,
-        onAction = viewModel::handleAction
+        onAction = viewModel::handleAction,
+        onNavigateToPokemon = onNavigateToPokemon
     )
 }
 
@@ -107,6 +110,7 @@ fun PokemonDetailContent(
     state: PokemonDetailState,
     onBackClick: () -> Unit,
     onAction: (PokemonDetailAction) -> Unit,
+    onNavigateToPokemon: (Int) -> Unit,
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader = koinInject()
 ) {
@@ -138,6 +142,7 @@ fun PokemonDetailContent(
                     pokemon = state.pokemon,
                     imageLoader = imageLoader,
                     scrollBehavior = scrollBehavior,
+                    onNavigateToPokemon = onNavigateToPokemon,
                     modifier = Modifier.fillMaxSize()
                 )
                 
@@ -176,6 +181,7 @@ private fun PokemonContent(
     pokemon: PokemonUI,
     imageLoader: ImageLoader,
     scrollBehavior: androidx.compose.material3.TopAppBarScrollBehavior,
+    onNavigateToPokemon: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showContent by remember { mutableStateOf(false) }
@@ -300,7 +306,8 @@ private fun PokemonContent(
                 ) {
                     EvolutionChainSection(
                         evolutionChain = pokemon.evolutionChain,
-                        imageLoader = imageLoader
+                        imageLoader = imageLoader,
+                        onEvolutionClick = onNavigateToPokemon
                     )
                 }
             }
@@ -830,6 +837,7 @@ private fun ErrorContent(
 private fun EvolutionChainSection(
     evolutionChain: List<com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.EvolutionStageUI>,
     imageLoader: ImageLoader,
+    onEvolutionClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -876,7 +884,11 @@ private fun EvolutionChainSection(
                     // Evolution Stage Card
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable { onEvolutionClick(evolution.pokemonId) }
+                            .padding(8.dp)
                     ) {
                         Box(
                             modifier = Modifier

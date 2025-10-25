@@ -98,6 +98,9 @@ internal fun App() {
                     pokemonId = pokemonDetailRoute.pokemonId,
                     onBackClick = {
                         navController.popBackStack()
+                    },
+                    onNavigateToPokemon = { pokemonId ->
+                        navController.navigateToPokemonDetail(pokemonId)
                     }
                     // No window insets padding here to allow edge-to-edge
                 )
