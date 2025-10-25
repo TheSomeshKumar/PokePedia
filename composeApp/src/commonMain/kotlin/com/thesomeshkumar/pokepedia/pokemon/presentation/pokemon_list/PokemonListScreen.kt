@@ -1,6 +1,7 @@
 package com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -168,7 +169,10 @@ fun PokemonListContent(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        itemsIndexed(state.pokemonList) { index, pokemon ->
+                        itemsIndexed(
+                            items = state.pokemonList,
+                            key = { _, pokemon -> pokemon.id }
+                        ) { index, pokemon ->
                             AnimatedPokemonCard(
                                 pokemon = pokemon,
                                 index = index,
@@ -217,41 +221,52 @@ private fun AnimatedPokemonCard(
     imageLoader: ImageLoader,
     modifier: Modifier = Modifier
 ) {
-    val offsetY = remember { Animatable(100f) }
-    val alpha = remember { Animatable(0f) }
-    val scale = remember { Animatable(0.8f) }
+    // Use remember with key to avoid recreating animatables on recomposition
+    val animationState = remember(pokemon.id) {
+        AnimationState(
+            offsetY = Animatable(100f),
+            alpha = Animatable(0f),
+            scale = Animatable(0.8f),
+            hasAnimated = false
+        )
+    }
     
+    // Only animate once when the card first appears
     LaunchedEffect(pokemon.id) {
-        // Stagger the animation based on index
-        delay((index % 10) * 30L)
-        
-        // Run all animations in parallel for snappier feel
-        launch {
-            offsetY.animateTo(
-                targetValue = 0f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioLowBouncy,
-                    stiffness = Spring.StiffnessMedium
+        if (!animationState.hasAnimated) {
+            animationState.hasAnimated = true
+            // Stagger the animation based on index (only for items within first 2 rows)
+            val staggerDelay = if (index < 10) (index % 10) * 30L else 0L
+            delay(staggerDelay)
+            
+            // Run all animations in parallel for snappier feel
+            launch {
+                animationState.offsetY.animateTo(
+                    targetValue = 0f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
                 )
-            )
-        }
-        launch {
-            alpha.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(
-                    durationMillis = 250,
-                    easing = FastOutSlowInEasing
+            }
+            launch {
+                animationState.alpha.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(
+                        durationMillis = 250,
+                        easing = FastOutSlowInEasing
+                    )
                 )
-            )
-        }
-        launch {
-            scale.animateTo(
-                targetValue = 1f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
+            }
+            launch {
+                animationState.scale.animateTo(
+                    targetValue = 1f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
                 )
-            )
+            }
         }
     }
     
@@ -260,11 +275,19 @@ private fun AnimatedPokemonCard(
         onClick = onClick,
         imageLoader = imageLoader,
         modifier = modifier
-            .offset(y = offsetY.value.dp)
-            .scale(scale.value)
-            .alpha(alpha.value)
+            .offset(y = animationState.offsetY.value.dp)
+            .scale(animationState.scale.value)
+            .alpha(animationState.alpha.value)
     )
 }
+
+// Data class to hold animation state
+private data class AnimationState(
+    val offsetY: Animatable<Float, AnimationVector1D>,
+    val alpha: Animatable<Float, AnimationVector1D>,
+    val scale: Animatable<Float, AnimationVector1D>,
+    var hasAnimated: Boolean = false
+)
 
 
 @Composable
