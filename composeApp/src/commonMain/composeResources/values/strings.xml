@@ -1,17 +1,64 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">PokePedia</string>
-    <string name="theme">Theme</string>
-    <string name="search_hint">Search...</string>
-    <string name="close_hint">Clear search</string>
-    <string name="search_results">Search Results</string>
-    <string name="no_search_results">Oops, there aren't any books for your search query.</string>
-    <string name="book_cover">Book cover</string>
-    <string name="rating">Rating</string>
-    <string name="pages">Pages</string>
-    <string name="languages">Languages</string>
-    <string name="synopsis">Synopsis</string>
-    <string name="go_back">Go back</string>
-    <string name="description_unavailable">Description not available.</string>
+    
+    <!-- Search -->
+    <string name="search_pokemon_hint">Search Pokemon...</string>
+    <string name="search_label">Search</string>
+    <string name="clear_search">Clear</string>
+    
+    <!-- Loading States -->
+    <string name="loading_pokemon">Loading Pokemon...</string>
+    <string name="loading_pokemon_details">Loading Pokemon details...</string>
+    
+    <!-- Error States -->
+    <string name="error_title">Oops! Something went wrong</string>
+    <string name="retry_button">Retry</string>
+    
+    <!-- Empty States -->
+    <string name="no_pokemon_found">No Pokemon found</string>
+    <string name="adjust_search_query">Try adjusting your search query</string>
+    
+    <!-- Pokemon List -->
+    <string name="pokemon_card_description">Pokemon card</string>
+    
+    <!-- Pokemon Detail Sections -->
+    <string name="basic_information">Basic Information</string>
+    <string name="description_section">Description</string>
+    <string name="stats_section">Stats</string>
+    <string name="abilities_section">Abilities</string>
+    <string name="evolution_chain_section">Evolution Chain</string>
+    <string name="species_information">Species Information</string>
+    
+    <!-- Pokemon Info Labels -->
+    <string name="height_label">Height</string>
+    <string name="weight_label">Weight</string>
+    <string name="base_xp_label">Base XP</string>
+    
+    <!-- Species Info Labels -->
+    <string name="generation_label">Generation</string>
+    <string name="habitat_label">Habitat</string>
+    <string name="capture_rate_label">Capture Rate</string>
+    <string name="base_happiness_label">Base Happiness</string>
+    <string name="growth_rate_label">Growth Rate</string>
+    <string name="gender_ratio_label">Gender Ratio</string>
+    <string name="egg_groups_label">Egg Groups</string>
+    
+    <!-- Classification Badges -->
+    <string name="legendary_badge">✨ Legendary</string>
+    <string name="mythical_badge">🌟 Mythical</string>
+    
+    <!-- Ability Labels -->
+    <string name="hidden_ability_suffix"> ✨</string>
+    
+    <!-- Navigation -->
+    <string name="back_button">Back</string>
+    
+    <!-- Content Descriptions -->
+    <string name="pokemon_image">Pokemon image</string>
+    <string name="evolution_image">Evolution stage image</string>
+    
+    <!-- Error Messages -->
     <string name="error_disk_full">Oops, it seems like your disk is full.</string>
     <string name="error_unknown">Oops, something went wrong.</string>
     <string name="error_request_timeout">The request timed out.</string>

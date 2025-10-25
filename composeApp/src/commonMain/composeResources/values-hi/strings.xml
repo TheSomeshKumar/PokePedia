@@ -1,0 +1,69 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">PokePedia</string>
+    
+    <!-- Search -->
+    <string name="search_pokemon_hint">पोकेमोन खोजें...</string>
+    <string name="search_label">खोजें</string>
+    <string name="clear_search">साफ़ करें</string>
+    
+    <!-- Loading States -->
+    <string name="loading_pokemon">पोकेमोन लोड हो रहे हैं...</string>
+    <string name="loading_pokemon_details">पोकेमोन विवरण लोड हो रहा है...</string>
+    
+    <!-- Error States -->
+    <string name="error_title">उफ़! कुछ गलत हो गया</string>
+    <string name="retry_button">पुनः प्रयास करें</string>
+    
+    <!-- Empty States -->
+    <string name="no_pokemon_found">कोई पोकेमोन नहीं मिला</string>
+    <string name="adjust_search_query">अपनी खोज को समायोजित करने का प्रयास करें</string>
+    
+    <!-- Pokemon List -->
+    <string name="pokemon_card_description">पोकेमोन कार्ड</string>
+    
+    <!-- Pokemon Detail Sections -->
+    <string name="basic_information">बुनियादी जानकारी</string>
+    <string name="description_section">विवरण</string>
+    <string name="stats_section">आंकड़े</string>
+    <string name="abilities_section">क्षमताएं</string>
+    <string name="evolution_chain_section">विकास श्रृंखला</string>
+    <string name="species_information">प्रजाति जानकारी</string>
+    
+    <!-- Pokemon Info Labels -->
+    <string name="height_label">ऊंचाई</string>
+    <string name="weight_label">वजन</string>
+    <string name="base_xp_label">बेस XP</string>
+    
+    <!-- Species Info Labels -->
+    <string name="generation_label">पीढ़ी</string>
+    <string name="habitat_label">आवास</string>
+    <string name="capture_rate_label">पकड़ने की दर</string>
+    <string name="base_happiness_label">बेस खुशी</string>
+    <string name="growth_rate_label">विकास दर</string>
+    <string name="gender_ratio_label">लिंग अनुपात</string>
+    <string name="egg_groups_label">अंडा समूह</string>
+    
+    <!-- Classification Badges -->
+    <string name="legendary_badge">✨ पौराणिक</string>
+    <string name="mythical_badge">🌟 रहस्यमय</string>
+    
+    <!-- Ability Labels -->
+    <string name="hidden_ability_suffix"> ✨</string>
+    
+    <!-- Navigation -->
+    <string name="back_button">वापस</string>
+    
+    <!-- Content Descriptions -->
+    <string name="pokemon_image">पोकेमोन छवि</string>
+    <string name="evolution_image">विकास चरण की छवि</string>
+    
+    <!-- Error Messages -->
+    <string name="error_disk_full">उफ़, ऐसा लगता है कि आपकी डिस्क भरी हुई है।</string>
+    <string name="error_unknown">उफ़, कुछ गलत हो गया।</string>
+    <string name="error_request_timeout">अनुरोध का समय समाप्त हो गया।</string>
+    <string name="error_no_internet">सर्वर तक नहीं पहुंच सके, कृपया अपना इंटरनेट कनेक्शन जांचें।</string>
+    <string name="error_too_many_requests">ऐसा लगता है कि आपका कोटा पार हो गया है।</string>
+    <string name="error_serialization">डेटा पार्स नहीं किया जा सका।</string>
+</resources>
+

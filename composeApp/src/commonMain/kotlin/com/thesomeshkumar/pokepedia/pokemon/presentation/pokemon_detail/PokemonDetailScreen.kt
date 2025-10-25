@@ -1,7 +1,6 @@
 package com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_detail
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,14 +25,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -48,9 +43,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -58,25 +53,40 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.AbilityChip
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.ErrorContent
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.InfoItem
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.LoadingContent
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.StatBar
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.TypeChip
+import com.thesomeshkumar.pokepedia.pokemon.presentation.components.parseColorHex
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonStatUI
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonTypeUI
 import com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonUI
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-
-// Helper function to parse hex color strings
-private fun parseColorHex(colorHex: String): Color {
-    return try {
-        val hex = if (colorHex.startsWith("#")) colorHex else "#$colorHex"
-        Color(
-            hex
-                .removePrefix("#")
-                .toLong(16) or 0xFF000000
-        )
-    } catch (e: Exception) {
-        Color.Gray
-    }
-}
+import pokepedia.composeapp.generated.resources.Res
+import pokepedia.composeapp.generated.resources.abilities_section
+import pokepedia.composeapp.generated.resources.back_button
+import pokepedia.composeapp.generated.resources.base_happiness_label
+import pokepedia.composeapp.generated.resources.base_xp_label
+import pokepedia.composeapp.generated.resources.basic_information
+import pokepedia.composeapp.generated.resources.capture_rate_label
+import pokepedia.composeapp.generated.resources.description_section
+import pokepedia.composeapp.generated.resources.egg_groups_label
+import pokepedia.composeapp.generated.resources.evolution_chain_section
+import pokepedia.composeapp.generated.resources.gender_ratio_label
+import pokepedia.composeapp.generated.resources.generation_label
+import pokepedia.composeapp.generated.resources.growth_rate_label
+import pokepedia.composeapp.generated.resources.habitat_label
+import pokepedia.composeapp.generated.resources.height_label
+import pokepedia.composeapp.generated.resources.legendary_badge
+import pokepedia.composeapp.generated.resources.loading_pokemon_details
+import pokepedia.composeapp.generated.resources.mythical_badge
+import pokepedia.composeapp.generated.resources.species_information
+import pokepedia.composeapp.generated.resources.stats_section
+import pokepedia.composeapp.generated.resources.weight_label
 
 /**
  * Created by Somesh Kumar on 27 September, 2025.
@@ -114,24 +124,27 @@ fun PokemonDetailContent(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader = koinInject()
 ) {
-    when {
-        state.isLoading -> {
-            Box(modifier = modifier.fillMaxSize()) {
-                LoadingContent(modifier = Modifier.align(Alignment.Center))
+        when {
+            state.isLoading -> {
+                Box(modifier = modifier.fillMaxSize()) {
+                    LoadingContent(
+                        message = stringResource(Res.string.loading_pokemon_details),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
-        }
 
-        state.errorMessage != null -> {
-            Box(modifier = modifier.fillMaxSize()) {
-                ErrorContent(
-                    message = state.errorMessage.asString(),
-                    onRetryClick = {
-                        onAction(PokemonDetailAction.Retry)
-                    },
-                    modifier = Modifier.align(Alignment.Center)
-                )
+            state.errorMessage != null -> {
+                Box(modifier = modifier.fillMaxSize()) {
+                    ErrorContent(
+                        message = state.errorMessage.asString(),
+                        onRetryClick = {
+                            onAction(PokemonDetailAction.Retry)
+                        },
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
-        }
 
         state.pokemon != null -> {
             val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -158,7 +171,7 @@ fun PokemonDetailContent(
                         IconButton(onClick = onBackClick) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back",
+                                contentDescription = stringResource(Res.string.back_button),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -438,7 +451,7 @@ private fun BasicInfoSection(
                 modifier = Modifier.padding(20.dp)
             ) {
                 Text(
-                    text = "Basic Information",
+                    text = stringResource(Res.string.basic_information),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = primaryColor
@@ -451,19 +464,19 @@ private fun BasicInfoSection(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     InfoItem(
-                        label = "Height",
+                        label = stringResource(Res.string.height_label),
                         value = pokemon.heightInMeters,
                         color = primaryColor,
                         modifier = Modifier.weight(1f)
                     )
                     InfoItem(
-                        label = "Weight",
+                        label = stringResource(Res.string.weight_label),
                         value = pokemon.weightInKilograms,
                         color = primaryColor,
                         modifier = Modifier.weight(1f)
                     )
                     InfoItem(
-                        label = "Base XP",
+                        label = stringResource(Res.string.base_xp_label),
                         value = pokemon.baseExperience.toString(),
                         color = primaryColor,
                         modifier = Modifier.weight(1f)
@@ -505,7 +518,7 @@ private fun DescriptionSection(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Description",
+                    text = stringResource(Res.string.description_section),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.secondary
@@ -554,7 +567,7 @@ private fun StatsSection(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Stats",
+                    text = stringResource(Res.string.stats_section),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.tertiary
@@ -602,7 +615,7 @@ private fun AbilitiesSection(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Abilities",
+                    text = stringResource(Res.string.abilities_section),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -618,217 +631,6 @@ private fun AbilitiesSection(
                     AbilityChip(ability = ability)
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun InfoItem(
-    label: String,
-    value: String,
-    color: Color,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            color = color
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-private fun StatBar(
-    stat: PokemonStatUI,
-    modifier: Modifier = Modifier
-) {
-    val animatedProgress by animateFloatAsState(
-        targetValue = stat.progressValue,
-        animationSpec = tween(durationMillis = 600),
-        label = "stat_progress"
-    )
-
-    val statColor = when {
-        stat.baseStat >= 100 -> Color(0xFF4CAF50)
-        stat.baseStat >= 70 -> Color(0xFF2196F3)
-        stat.baseStat >= 50 -> Color(0xFFFFC107)
-        else -> Color(0xFFFF5722)
-    }
-
-    Column(modifier = modifier) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stat.displayName,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium
-            )
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(statColor.copy(alpha = 0.15f))
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-            ) {
-                Text(
-                    text = stat.baseStat.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = statColor
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(10.dp)
-                .clip(RoundedCornerShape(5.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(animatedProgress)
-                    .clip(RoundedCornerShape(5.dp))
-                    .background(
-                        Brush.horizontalGradient(
-                            colors = listOf(
-                                statColor,
-                                statColor.copy(alpha = 0.7f)
-                            )
-                        )
-                    )
-            )
-        }
-    }
-}
-
-@Composable
-private fun TypeChip(
-    type: PokemonTypeUI,
-    modifier: Modifier = Modifier
-) {
-    val typeColor = parseColorHex(type.colorHex)
-    
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .background(
-                Brush.horizontalGradient(
-                    colors = listOf(
-                        typeColor,
-                        typeColor.copy(alpha = 0.85f)
-                    )
-                )
-            )
-            .padding(
-                horizontal = 20.dp,
-                vertical = 10.dp
-            )
-    ) {
-        Text(
-            text = type.displayName,
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-private fun AbilityChip(
-    ability: com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list.PokemonAbilityUI,
-    modifier: Modifier = Modifier
-) {
-    val chipColor = if (ability.isHidden) {
-        MaterialTheme.colorScheme.secondary
-    } else {
-        MaterialTheme.colorScheme.primary
-    }
-
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(
-                Brush.horizontalGradient(
-                    colors = listOf(
-                        chipColor,
-                        chipColor.copy(alpha = 0.8f)
-                    )
-                )
-            )
-            .padding(
-                horizontal = 16.dp,
-                vertical = 10.dp
-            )
-    ) {
-        Text(
-            text = if (ability.isHidden) "${ability.displayName} ✨" else ability.displayName,
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold
-        )
-    }
-}
-
-@Composable
-private fun LoadingContent(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator()
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Loading Pokemon details...",
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@Composable
-private fun ErrorContent(
-    message: String,
-    onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Oops! Something went wrong",
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetryClick) {
-            Text("Retry")
         }
     }
 }
@@ -866,7 +668,7 @@ private fun EvolutionChainSection(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Evolution Chain",
+                    text = stringResource(Res.string.evolution_chain_section),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF6C63FF)
@@ -988,7 +790,7 @@ private fun SpeciesInfoSection(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Species Information",
+                    text = stringResource(Res.string.species_information),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFFF6B9D)
@@ -1004,49 +806,55 @@ private fun SpeciesInfoSection(
                     modifier = Modifier.padding(bottom = 16.dp)
                 ) {
                     if (species.isLegendary) {
-                        ClassificationBadge(text = "✨ Legendary", color = Color(0xFFFFD700))
+                        ClassificationBadge(
+                            text = stringResource(Res.string.legendary_badge), 
+                            color = Color(0xFFFFD700)
+                        )
                     }
                     if (species.isMythical) {
-                        ClassificationBadge(text = "🌟 Mythical", color = Color(0xFFFF69B4))
+                        ClassificationBadge(
+                            text = stringResource(Res.string.mythical_badge), 
+                            color = Color(0xFFFF69B4)
+                        )
                     }
                 }
             }
 
             // Generation
             SpeciesInfoRow(
-                label = "Generation",
+                label = stringResource(Res.string.generation_label),
                 value = species.generation
             )
 
             // Habitat
             if (species.habitat.isNotEmpty()) {
                 SpeciesInfoRow(
-                    label = "Habitat",
+                    label = stringResource(Res.string.habitat_label),
                     value = species.habitat
                 )
             }
 
             // Capture Rate
             SpeciesInfoRow(
-                label = "Capture Rate",
+                label = stringResource(Res.string.capture_rate_label),
                 value = "${species.captureRate}/255"
             )
 
             // Base Happiness
             SpeciesInfoRow(
-                label = "Base Happiness",
+                label = stringResource(Res.string.base_happiness_label),
                 value = "${species.baseHappiness}/255"
             )
 
             // Growth Rate
             SpeciesInfoRow(
-                label = "Growth Rate",
+                label = stringResource(Res.string.growth_rate_label),
                 value = species.growthRate
             )
 
             // Gender Ratio
             SpeciesInfoRow(
-                label = "Gender Ratio",
+                label = stringResource(Res.string.gender_ratio_label),
                 value = species.genderRatio
             )
 
@@ -1054,7 +862,7 @@ private fun SpeciesInfoSection(
             if (species.eggGroups.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Egg Groups",
+                    text = stringResource(Res.string.egg_groups_label),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFFF6B9D)

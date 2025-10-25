@@ -1,0 +1,69 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">PokePedia</string>
+    
+    <!-- Search -->
+    <string name="search_pokemon_hint">Buscar Pokémon...</string>
+    <string name="search_label">Buscar</string>
+    <string name="clear_search">Limpiar</string>
+    
+    <!-- Loading States -->
+    <string name="loading_pokemon">Cargando Pokémon...</string>
+    <string name="loading_pokemon_details">Cargando detalles del Pokémon...</string>
+    
+    <!-- Error States -->
+    <string name="error_title">¡Ups! Algo salió mal</string>
+    <string name="retry_button">Reintentar</string>
+    
+    <!-- Empty States -->
+    <string name="no_pokemon_found">No se encontraron Pokémon</string>
+    <string name="adjust_search_query">Intenta ajustar tu búsqueda</string>
+    
+    <!-- Pokemon List -->
+    <string name="pokemon_card_description">Tarjeta de Pokémon</string>
+    
+    <!-- Pokemon Detail Sections -->
+    <string name="basic_information">Información Básica</string>
+    <string name="description_section">Descripción</string>
+    <string name="stats_section">Estadísticas</string>
+    <string name="abilities_section">Habilidades</string>
+    <string name="evolution_chain_section">Cadena de Evolución</string>
+    <string name="species_information">Información de Especie</string>
+    
+    <!-- Pokemon Info Labels -->
+    <string name="height_label">Altura</string>
+    <string name="weight_label">Peso</string>
+    <string name="base_xp_label">EXP Base</string>
+    
+    <!-- Species Info Labels -->
+    <string name="generation_label">Generación</string>
+    <string name="habitat_label">Hábitat</string>
+    <string name="capture_rate_label">Tasa de Captura</string>
+    <string name="base_happiness_label">Felicidad Base</string>
+    <string name="growth_rate_label">Tasa de Crecimiento</string>
+    <string name="gender_ratio_label">Proporción de Género</string>
+    <string name="egg_groups_label">Grupos de Huevo</string>
+    
+    <!-- Classification Badges -->
+    <string name="legendary_badge">✨ Legendario</string>
+    <string name="mythical_badge">🌟 Mítico</string>
+    
+    <!-- Ability Labels -->
+    <string name="hidden_ability_suffix"> ✨</string>
+    
+    <!-- Navigation -->
+    <string name="back_button">Atrás</string>
+    
+    <!-- Content Descriptions -->
+    <string name="pokemon_image">Imagen de Pokémon</string>
+    <string name="evolution_image">Imagen de etapa de evolución</string>
+    
+    <!-- Error Messages -->
+    <string name="error_disk_full">Ups, parece que tu disco está lleno.</string>
+    <string name="error_unknown">Ups, algo salió mal.</string>
+    <string name="error_request_timeout">Se agotó el tiempo de espera de la solicitud.</string>
+    <string name="error_no_internet">No se pudo alcanzar el servidor, verifica tu conexión a Internet.</string>
+    <string name="error_too_many_requests">Parece que se ha excedido tu cuota.</string>
+    <string name="error_serialization">No se pudieron analizar los datos.</string>
+</resources>
+
