@@ -194,10 +194,10 @@ private fun PokemonContent(
             // Hero Section
             AnimatedVisibility(
                 visible = showContent,
-                enter = fadeIn(animationSpec = tween(500)) +
+                enter = fadeIn(animationSpec = tween(300)) +
                         slideInVertically(
                             initialOffsetY = { -100 },
-                            animationSpec = tween(500)
+                            animationSpec = tween(300)
                         )
             ) {
                 PokemonHeroSection(
@@ -215,10 +215,10 @@ private fun PokemonContent(
         item {
             AnimatedVisibility(
                 visible = showContent,
-                enter = fadeIn(animationSpec = tween(500, delayMillis = 100)) +
+                enter = fadeIn(animationSpec = tween(300, delayMillis = 50)) +
                         slideInVertically(
                             initialOffsetY = { 50 },
-                            animationSpec = tween(500, delayMillis = 100)
+                            animationSpec = tween(300, delayMillis = 50)
                         )
             ) {
                 BasicInfoSection(pokemon = pokemon)
@@ -234,10 +234,10 @@ private fun PokemonContent(
             item {
                 AnimatedVisibility(
                     visible = showContent,
-                    enter = fadeIn(animationSpec = tween(500, delayMillis = 200)) +
+                    enter = fadeIn(animationSpec = tween(300, delayMillis = 100)) +
                             slideInVertically(
                                 initialOffsetY = { 50 },
-                                animationSpec = tween(500, delayMillis = 200)
+                                animationSpec = tween(300, delayMillis = 100)
                             )
                 ) {
                     DescriptionSection(description = pokemon.description)
@@ -253,10 +253,10 @@ private fun PokemonContent(
         item {
             AnimatedVisibility(
                 visible = showContent,
-                enter = fadeIn(animationSpec = tween(500, delayMillis = 300)) +
+                enter = fadeIn(animationSpec = tween(300, delayMillis = 150)) +
                         slideInVertically(
                             initialOffsetY = { 50 },
-                            animationSpec = tween(500, delayMillis = 300)
+                            animationSpec = tween(300, delayMillis = 150)
                         )
             ) {
                 StatsSection(stats = pokemon.stats)
@@ -272,10 +272,10 @@ private fun PokemonContent(
             item {
                 AnimatedVisibility(
                     visible = showContent,
-                    enter = fadeIn(animationSpec = tween(500, delayMillis = 400)) +
+                    enter = fadeIn(animationSpec = tween(300, delayMillis = 200)) +
                             slideInVertically(
                                 initialOffsetY = { 50 },
-                                animationSpec = tween(500, delayMillis = 400)
+                                animationSpec = tween(300, delayMillis = 200)
                             )
                 ) {
                     AbilitiesSection(abilities = pokemon.abilities)
@@ -292,10 +292,10 @@ private fun PokemonContent(
             item {
                 AnimatedVisibility(
                     visible = showContent,
-                    enter = fadeIn(animationSpec = tween(500, delayMillis = 500)) +
+                    enter = fadeIn(animationSpec = tween(300, delayMillis = 250)) +
                             slideInVertically(
                                 initialOffsetY = { 50 },
-                                animationSpec = tween(500, delayMillis = 500)
+                                animationSpec = tween(300, delayMillis = 250)
                             )
                 ) {
                     EvolutionChainSection(
@@ -315,10 +315,10 @@ private fun PokemonContent(
             item {
                 AnimatedVisibility(
                     visible = showContent,
-                    enter = fadeIn(animationSpec = tween(500, delayMillis = 600)) +
+                    enter = fadeIn(animationSpec = tween(300, delayMillis = 300)) +
                             slideInVertically(
                                 initialOffsetY = { 50 },
-                                animationSpec = tween(500, delayMillis = 600)
+                                animationSpec = tween(300, delayMillis = 300)
                             )
                 ) {
                     SpeciesInfoSection(species = species)
@@ -649,7 +649,7 @@ private fun StatBar(
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = stat.progressValue,
-        animationSpec = tween(durationMillis = 1000),
+        animationSpec = tween(durationMillis = 600),
         label = "stat_progress"
     )
 
