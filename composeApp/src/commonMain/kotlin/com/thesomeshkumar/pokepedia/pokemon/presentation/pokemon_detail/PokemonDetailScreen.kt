@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
+import com.skydoves.compose.stability.runtime.TraceRecomposition
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.AbilityChip
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.ErrorContent
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.InfoItem
@@ -106,17 +108,23 @@ fun PokemonDetailScreen(
     LaunchedEffect(pokemonId) {
         viewModel.initWithPokemonId(pokemonId)
     }
+    
+    // Remember the action handler to prevent creating new lambda on each recomposition
+    val onAction = remember(viewModel) {
+        { action: PokemonDetailAction -> viewModel.handleAction(action) }
+    }
 
     PokemonDetailContent(
         state = state,
         onBackClick = onBackClick,
-        onAction = viewModel::handleAction,
+        onAction = onAction,
         onNavigateToPokemon = onNavigateToPokemon
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@TraceRecomposition
 fun PokemonDetailContent(
     state: PokemonDetailState,
     onBackClick: () -> Unit,
@@ -125,8 +133,13 @@ fun PokemonDetailContent(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader = koinInject()
 ) {
-        when {
-            state.isLoading -> {
+    // Remember retry action to prevent creating new lambda on each recomposition
+    val onRetry = remember(onAction) {
+        { onAction(PokemonDetailAction.Retry) }
+    }
+    
+    when {
+        state.isLoading -> {
                 Box(modifier = modifier.fillMaxSize()) {
                     LoadingContent(
                         message = stringResource(Res.string.loading_pokemon_details),
@@ -139,9 +152,7 @@ fun PokemonDetailContent(
                 Box(modifier = modifier.fillMaxSize()) {
                     ErrorContent(
                         message = state.errorMessage.asString(),
-                        onRetryClick = {
-                            onAction(PokemonDetailAction.Retry)
-                        },
+                        onRetryClick = onRetry,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -696,13 +707,18 @@ private fun EvolutionChainSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 evolutionChain.forEachIndexed { index, evolution ->
+                    // Remember click handler for each evolution to prevent unnecessary recompositions
+                    val evolutionClickHandler = remember(evolution.pokemonId) {
+                        { onEvolutionClick(evolution.pokemonId) }
+                    }
+                    
                     // Evolution Stage Card
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .weight(1f)
                             .clip(MaterialTheme.shapes.medium)
-                            .clickable { onEvolutionClick(evolution.pokemonId) }
+                            .clickable(onClick = evolutionClickHandler)
                             .padding(dimensions.spaceSmall)
                     ) {
                         Box(

@@ -20,6 +20,8 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
     alias(libs.plugins.buildConfig)
+    alias(libs.plugins.stability.analyzer)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -78,6 +80,9 @@ kotlin {
             implementation(kotlin("test"))
             implementation(compose.uiTest)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
+            implementation(libs.kotest.assertions)
+            // No mocking library needed - use Fake implementations for KMP compatibility
         }
 
         androidMain.dependencies {
@@ -228,6 +233,7 @@ tasks
     .configureEach {
         dependsOn(
             "generateResourceAccessorsForAndroidDebug",
+            "generateResourceAccessorsForAndroidRelease",
             "generateResourceAccessorsForAndroidMain",
             "generateActualResourceCollectorsForAndroidMain",
             "generateComposeResClass",
@@ -236,3 +242,30 @@ tasks
             "generateNonAndroidBuildConfig"
         )
     }
+
+// Kover configuration for code coverage
+kover {
+    reports {
+        filters {
+            excludes {
+                // Exclude generated code
+                packages("com.thesomeshkumar.pokepedia.BuildConfig")
+                packages("pokepedia.composeapp.generated.resources")
+                
+                // Exclude Android-specific files
+                classes("*.BuildConfig")
+                classes("*ComposableSingletons*")
+                
+                // Exclude DI modules if you want (uncomment if needed)
+                // classes("*Module*")
+            }
+        }
+        
+        // Configure verification rules (optional - fails build if coverage is below threshold)
+        verify {
+            rule {
+                minBound(50) // Minimum 50% coverage
+            }
+        }
+    }
+}

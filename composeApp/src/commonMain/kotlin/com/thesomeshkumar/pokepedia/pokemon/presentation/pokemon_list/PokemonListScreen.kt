@@ -37,9 +37,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -48,6 +51,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
+import com.skydoves.compose.stability.runtime.TraceRecomposition
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.ErrorContent
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.LoadingContent
 import com.thesomeshkumar.pokepedia.pokemon.presentation.components.SearchBar
@@ -85,11 +90,16 @@ fun PokemonListScreen(
     viewModel: PokemonListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    
+    // Remember the action handler to prevent creating new lambda on each recomposition
+    val onAction = remember(viewModel) {
+        { action: PokemonListAction -> viewModel.handleAction(action) }
+    }
 
     PokemonListContent(
         state = state,
         onPokemonClick = onPokemonClick,
-        onAction = viewModel::handleAction,
+        onAction = onAction,
         modifier = modifier
     )
 }
@@ -175,10 +185,15 @@ fun PokemonListContent(
                             items = state.pokemonList,
                             key = { _, pokemon -> pokemon.id }
                         ) { index, pokemon ->
+                            // Remember onClick to prevent creating new lambda on each recomposition
+                            val onClick = remember(pokemon.id) {
+                                { onPokemonClick(pokemon) }
+                            }
+                            
                             AnimatedPokemonCard(
                                 pokemon = pokemon,
                                 index = index,
-                                onClick = { onPokemonClick(pokemon) },
+                                onClick = onClick,
                                 imageLoader = imageLoader
                             )
                         }
@@ -223,20 +238,22 @@ private fun AnimatedPokemonCard(
     imageLoader: ImageLoader,
     modifier: Modifier = Modifier
 ) {
-    // Use remember with key to avoid recreating animatables on recomposition
+    // Use derivedStateOf to reduce recompositions - only recompose when animation actually changes
     val animationState = remember(pokemon.id) {
         AnimationState(
             offsetY = Animatable(100f),
             alpha = Animatable(0f),
-            scale = Animatable(0.8f),
-            hasAnimated = false
+            scale = Animatable(0.8f)
         )
     }
     
+    // Track if animation has completed to avoid re-animating
+    var hasAnimated by remember(pokemon.id) { mutableStateOf(false) }
+    
     // Only animate once when the card first appears
     LaunchedEffect(pokemon.id) {
-        if (!animationState.hasAnimated) {
-            animationState.hasAnimated = true
+        if (!hasAnimated) {
+            hasAnimated = true
             // Stagger the animation based on index (only for items within first 2 rows)
             val staggerDelay = if (index < 10) (index % 10) * 30L else 0L
             delay(staggerDelay)
@@ -277,21 +294,24 @@ private fun AnimatedPokemonCard(
         onClick = onClick,
         imageLoader = imageLoader,
         modifier = modifier
-            .offset(y = animationState.offsetY.value.dp)
-            .scale(animationState.scale.value)
-            .alpha(animationState.alpha.value)
+            .graphicsLayer {
+                // Use graphicsLayer instead of individual modifiers - more performant
+                translationY = animationState.offsetY.value
+                scaleX = animationState.scale.value
+                scaleY = animationState.scale.value
+                alpha = animationState.alpha.value
+            }
     )
 }
 
 // Data class to hold animation state
-private data class AnimationState(
+private class AnimationState(
     val offsetY: Animatable<Float, AnimationVector1D>,
     val alpha: Animatable<Float, AnimationVector1D>,
-    val scale: Animatable<Float, AnimationVector1D>,
-    var hasAnimated: Boolean = false
+    val scale: Animatable<Float, AnimationVector1D>
 )
 
-
+@TraceRecomposition
 @Composable
 private fun PokemonGridCard(
     pokemon: PokemonUI,
