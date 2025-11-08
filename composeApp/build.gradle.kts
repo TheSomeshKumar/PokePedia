@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.compose.multiplatform)
             implementation(libs.compose.adaptive)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.coil)

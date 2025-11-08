@@ -1,7 +1,10 @@
 package com.thesomeshkumar.pokepedia.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
@@ -93,6 +96,7 @@ private val DarkColorScheme = darkColorScheme(
 internal val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
 internal val LocalPokemonColors = compositionLocalOf { pokemonColors }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun AppTheme(
     content: @Composable () -> Unit
@@ -106,8 +110,9 @@ internal fun AppTheme(
     ) {
         val isDark by isDarkState
         SystemAppearance(!isDark)
-        MaterialTheme(
+        MaterialExpressiveTheme(
             colorScheme = if (isDark) DarkColorScheme else LightColorScheme,
+            motionScheme = MotionScheme.expressive(),
             shapes = AppShapes,
             content = { Surface(content = content) })
     }

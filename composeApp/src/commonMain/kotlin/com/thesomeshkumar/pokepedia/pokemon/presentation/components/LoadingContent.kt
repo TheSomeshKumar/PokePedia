@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +16,7 @@ import org.jetbrains.compose.resources.stringResource
 import pokepedia.composeapp.generated.resources.Res
 import pokepedia.composeapp.generated.resources.loading_pokemon
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoadingContent(
     message: String? = null,
@@ -23,7 +26,7 @@ fun LoadingContent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator()
+        CircularWavyProgressIndicator()
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = message ?: stringResource(Res.string.loading_pokemon),
