@@ -305,6 +305,7 @@ private fun AnimatedPokemonCard(
 }
 
 // Data class to hold animation state
+@Stable
 private class AnimationState(
     val offsetY: Animatable<Float, AnimationVector1D>,
     val alpha: Animatable<Float, AnimationVector1D>,
@@ -320,13 +321,27 @@ private fun PokemonGridCard(
     modifier: Modifier = Modifier
 ) {
     val dimensions = AppTheme.dimensions
-    val primaryColor = pokemon.primaryType?.let {
-        parseColorHex(it.colorHex)
-    } ?: MaterialTheme.colorScheme.primary
     
-    val secondaryColor = pokemon.types.getOrNull(1)?.let {
-        parseColorHex(it.colorHex)
-    } ?: primaryColor
+    // Remember parsed colors to avoid parsing on every recomposition
+    val primaryColor = remember(pokemon.primaryType?.colorHex) {
+        pokemon.primaryType?.let { parseColorHex(it.colorHex) }
+            ?: Color.Unspecified
+    }
+    val finalPrimaryColor = if (primaryColor == Color.Unspecified) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        primaryColor
+    }
+    
+    val secondaryColor = remember(pokemon.types.getOrNull(1)?.colorHex) {
+        pokemon.types.getOrNull(1)?.let { parseColorHex(it.colorHex) }
+            ?: Color.Unspecified
+    }
+    val finalSecondaryColor = if (secondaryColor == Color.Unspecified) {
+        finalPrimaryColor
+    } else {
+        secondaryColor
+    }
 
     Card(
         modifier = modifier
@@ -350,8 +365,8 @@ private fun PokemonGridCard(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                primaryColor.copy(alpha = 0.15f),
-                                secondaryColor.copy(alpha = 0.08f),
+                                finalPrimaryColor.copy(alpha = 0.15f),
+                                finalSecondaryColor.copy(alpha = 0.08f),
                                 Color.White
                             ),
                             startY = 0f,
@@ -368,7 +383,7 @@ private fun PokemonGridCard(
                     .align(Alignment.TopEnd)
                     .clip(CircleShape)
                     .alpha(0.1f)
-                    .background(primaryColor)
+                    .background(finalPrimaryColor)
             )
             
             Box(
@@ -378,7 +393,7 @@ private fun PokemonGridCard(
                     .align(Alignment.BottomStart)
                     .clip(CircleShape)
                     .alpha(0.08f)
-                    .background(secondaryColor)
+                    .background(finalSecondaryColor)
             )
 
             Column(
@@ -405,7 +420,7 @@ private fun PokemonGridCard(
                     Text(
                         text = pokemon.pokemonNumber,
                         style = MaterialTheme.typography.labelMedium,
-                        color = primaryColor,
+                        color = finalPrimaryColor,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 11.sp
                     )
@@ -428,7 +443,7 @@ private fun PokemonGridCard(
                             .scale(0.9f)
                             .alpha(0.2f)
                             .clip(CircleShape)
-                            .background(primaryColor)
+                            .background(finalPrimaryColor)
                     )
                     
                     // Glow layer
@@ -439,8 +454,8 @@ private fun PokemonGridCard(
                             .background(
                                 Brush.radialGradient(
                                     colors = listOf(
-                                        primaryColor.copy(alpha = 0.4f),
-                                        primaryColor.copy(alpha = 0.2f),
+                                        finalPrimaryColor.copy(alpha = 0.4f),
+                                        finalPrimaryColor.copy(alpha = 0.2f),
                                         Color.Transparent
                                     )
                                 )
@@ -454,7 +469,7 @@ private fun PokemonGridCard(
                             .shadow(
                                 elevation = 12.dp,
                                 shape = CircleShape,
-                                spotColor = primaryColor.copy(alpha = 0.5f)
+                                spotColor = finalPrimaryColor.copy(alpha = 0.5f)
                             ),
                         shape = CircleShape,
                         color = Color.White.copy(alpha = 0.9f)
@@ -485,7 +500,7 @@ private fun PokemonGridCard(
                     fontWeight = FontWeight.ExtraBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = primaryColor,
+                    color = finalPrimaryColor,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -499,16 +514,21 @@ private fun PokemonGridCard(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    pokemon.types.take(2).forEach { type ->
+                    pokemon.types.take(2).forEachIndexed { index, type ->
+                        // Remember parsed color to avoid parsing twice per recomposition
+                        val typeColor = remember(type.colorHex) {
+                            parseColorHex(type.colorHex)
+                        }
+                        
                         Box(
                             modifier = Modifier
                                 .shadow(
                                     elevation = 4.dp,
                                     shape = MaterialTheme.shapes.large,
-                                    spotColor = parseColorHex(type.colorHex).copy(alpha = 0.5f)
+                                    spotColor = typeColor.copy(alpha = 0.5f)
                                 )
                                 .clip(MaterialTheme.shapes.large)
-                                .background(parseColorHex(type.colorHex))
+                                .background(typeColor)
                                 .padding(
                                     horizontal = dimensions.spaceMedium,
                                     vertical = dimensions.spaceSmall - 2.dp
@@ -523,7 +543,7 @@ private fun PokemonGridCard(
                             )
                         }
                         
-                        if (pokemon.types.size > 1 && type != pokemon.types.last()) {
+                        if (index < pokemon.types.take(2).size - 1) {
                             Spacer(modifier = Modifier.width(dimensions.spaceSmall - 2.dp))
                         }
                     }

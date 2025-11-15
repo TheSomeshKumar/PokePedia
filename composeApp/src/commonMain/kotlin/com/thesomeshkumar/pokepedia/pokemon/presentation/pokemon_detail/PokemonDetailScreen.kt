@@ -367,9 +367,16 @@ private fun PokemonHeroSection(
     imageLoader: ImageLoader,
     modifier: Modifier = Modifier
 ) {
-    val primaryColor = pokemon.primaryType?.let {
-        parseColorHex(it.colorHex)
-    } ?: MaterialTheme.colorScheme.primary
+    // Remember parsed color to avoid parsing on every recomposition
+    val primaryColor = remember(pokemon.primaryType?.colorHex) {
+        pokemon.primaryType?.let { parseColorHex(it.colorHex) }
+            ?: Color.Unspecified
+    }
+    val finalPrimaryColor = if (primaryColor == Color.Unspecified) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        primaryColor
+    }
     val dimensions = AppTheme.dimensions
 
     Box(
@@ -379,7 +386,7 @@ private fun PokemonHeroSection(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        primaryColor.copy(alpha = 0.3f),
+                        finalPrimaryColor.copy(alpha = 0.3f),
                         Color.Transparent
                     )
                 )
@@ -431,9 +438,16 @@ private fun BasicInfoSection(
     pokemon: PokemonUI,
     modifier: Modifier = Modifier
 ) {
-    val primaryColor = pokemon.primaryType?.let {
-        parseColorHex(it.colorHex)
-    } ?: MaterialTheme.colorScheme.primary
+    // Remember parsed color to avoid parsing on every recomposition
+    val primaryColor = remember(pokemon.primaryType?.colorHex) {
+        pokemon.primaryType?.let { parseColorHex(it.colorHex) }
+            ?: Color.Unspecified
+    }
+    val finalPrimaryColor = if (primaryColor == Color.Unspecified) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        primaryColor
+    }
     val dimensions = AppTheme.dimensions
 
     Card(
@@ -455,8 +469,8 @@ private fun BasicInfoSection(
                     .background(
                         Brush.horizontalGradient(
                             colors = listOf(
-                                primaryColor.copy(alpha = 0.7f),
-                                primaryColor.copy(alpha = 0.3f)
+                                finalPrimaryColor.copy(alpha = 0.7f),
+                                finalPrimaryColor.copy(alpha = 0.3f)
                             )
                         )
                     )
@@ -469,7 +483,7 @@ private fun BasicInfoSection(
                     text = stringResource(Res.string.basic_information),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = primaryColor
+                    color = finalPrimaryColor
                 )
 
                 Spacer(modifier = Modifier.height(dimensions.spaceLarge))
@@ -481,19 +495,19 @@ private fun BasicInfoSection(
                     InfoItem(
                         label = stringResource(Res.string.height_label),
                         value = pokemon.heightInMeters,
-                        color = primaryColor,
+                        color = finalPrimaryColor,
                         modifier = Modifier.weight(1f)
                     )
                     InfoItem(
                         label = stringResource(Res.string.weight_label),
                         value = pokemon.weightInKilograms,
-                        color = primaryColor,
+                        color = finalPrimaryColor,
                         modifier = Modifier.weight(1f)
                     )
                     InfoItem(
                         label = stringResource(Res.string.base_xp_label),
                         value = pokemon.baseExperience.toString(),
-                        color = primaryColor,
+                        color = finalPrimaryColor,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -595,9 +609,11 @@ private fun StatsSection(
 
             Spacer(modifier = Modifier.height(dimensions.spaceLarge))
 
-            stats.forEach { stat ->
+            stats.forEachIndexed { index, stat ->
                 StatBar(stat = stat)
-                Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                if (index < stats.size - 1) {
+                    Spacer(modifier = Modifier.height(dimensions.spaceMedium))
+                }
             }
         }
     }
@@ -983,8 +999,11 @@ private fun EggGroupChip(
     val dimensions = AppTheme.dimensions
     val pokemonColors = AppTheme.pokemonColors
     
-    val formattedEggGroup = eggGroup.replace("-", " ").split(" ").joinToString(" ") { word ->
-        word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    // Remember formatted string to avoid processing on every recomposition
+    val formattedEggGroup = remember(eggGroup) {
+        eggGroup.replace("-", " ").split(" ").joinToString(" ") { word ->
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        }
     }
 
     Box(
