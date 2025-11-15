@@ -30,9 +30,6 @@ actual val platformModule: Module
         single {
             ImageLoader
                 .Builder(androidContext())
-                .components {
-                    add(KtorNetworkFetcherFactory(httpClient = get<HttpClient>()))
-                }
                 .memoryCache {
                     MemoryCache.Builder()
                         .maxSizePercent(androidContext(), 0.25) // Use 25% of app memory
