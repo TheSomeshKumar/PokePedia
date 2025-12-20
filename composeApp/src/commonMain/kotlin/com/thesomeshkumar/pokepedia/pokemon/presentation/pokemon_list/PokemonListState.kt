@@ -1,6 +1,5 @@
 package com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list
 
-import androidx.compose.runtime.Immutable
 import com.thesomeshkumar.pokepedia.core.presentation.UiText
 import com.thesomeshkumar.pokepedia.pokemon.domain.Pokemon
 
@@ -8,7 +7,6 @@ import com.thesomeshkumar.pokepedia.pokemon.domain.Pokemon
  * Created by Somesh Kumar on 27 September, 2025.
  * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
-@Immutable
 data class PokemonListState(
     val isLoading: Boolean = false,
     val pokemonList: List<PokemonUI> = emptyList(),
@@ -20,7 +18,6 @@ data class PokemonListState(
     val isSearching: Boolean = false
 )
 
-@Immutable
 data class PokemonUI(
     val id: Int,
     val name: String,
@@ -60,7 +57,6 @@ data class PokemonUI(
         }"
 }
 
-@Immutable
 data class PokemonSpritesUI(
     val frontDefault: String?,
     val frontShiny: String?,
@@ -72,7 +68,6 @@ data class PokemonSpritesUI(
         get() = officialArtwork ?: frontDefault
 }
 
-@Immutable
 data class PokemonStatUI(
     val baseStat: Int,
     val effort: Int,
@@ -86,7 +81,6 @@ data class PokemonStatUI(
         )
 }
 
-@Immutable
 data class PokemonTypeUI(
     val slot: Int,
     val name: String,
@@ -94,7 +88,6 @@ data class PokemonTypeUI(
     val colorHex: String
 )
 
-@Immutable
 data class PokemonAbilityUI(
     val isHidden: Boolean,
     val slot: Int,
@@ -102,7 +95,6 @@ data class PokemonAbilityUI(
     val displayName: String
 )
 
-@Immutable
 data class EvolutionStageUI(
     val pokemonId: Int,
     val pokemonName: String,
@@ -114,7 +106,6 @@ data class EvolutionStageUI(
     val evolutionMethod: String
 )
 
-@Immutable
 data class PokemonSpeciesUI(
     val name: String,
     val isLegendary: Boolean,
