@@ -1,5 +1,6 @@
 package com.thesomeshkumar.pokepedia.pokemon.presentation.pokemon_list
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thesomeshkumar.pokepedia.core.domain.onError
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
  * Created by Somesh Kumar on 27 September, 2025.
  * Copyright ©2025 Somesh Kumar. All rights reserved.
  */
+@Immutable
 class PokemonListViewModel(
     private val pokemonRepository: PokemonRepository
 ) : ViewModel() {

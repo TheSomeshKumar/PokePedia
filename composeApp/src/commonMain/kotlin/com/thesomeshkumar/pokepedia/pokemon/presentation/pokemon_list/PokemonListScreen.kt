@@ -343,6 +343,10 @@ private fun PokemonGridCard(
         secondaryColor
     }
 
+    // Get theme-aware colors
+    val cardBackgroundColor = MaterialTheme.colorScheme.surface
+    val cardContentColor = MaterialTheme.colorScheme.onSurface
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -354,7 +358,7 @@ private fun PokemonGridCard(
         ),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = cardBackgroundColor
         )
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -367,7 +371,7 @@ private fun PokemonGridCard(
                             colors = listOf(
                                 finalPrimaryColor.copy(alpha = 0.15f),
                                 finalSecondaryColor.copy(alpha = 0.08f),
-                                Color.White
+                                cardBackgroundColor
                             ),
                             startY = 0f,
                             endY = 800f
@@ -411,7 +415,7 @@ private fun PokemonGridCard(
                             shape = MaterialTheme.shapes.medium
                         )
                         .clip(MaterialTheme.shapes.medium)
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
                         .padding(
                             horizontal = dimensions.chipPaddingVertical,
                             vertical = dimensions.spaceSmall - 2.dp
@@ -472,7 +476,7 @@ private fun PokemonGridCard(
                                 spotColor = finalPrimaryColor.copy(alpha = 0.5f)
                             ),
                         shape = CircleShape,
-                        color = Color.White.copy(alpha = 0.9f)
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
