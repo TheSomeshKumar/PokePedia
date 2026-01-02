@@ -39,10 +39,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -90,7 +90,7 @@ fun PokemonListScreen(
     viewModel: PokemonListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    
+
     // Remember the action handler to prevent creating new lambda on each recomposition
     val onAction = remember(viewModel) {
         { action: PokemonListAction -> viewModel.handleAction(action) }
@@ -115,6 +115,7 @@ fun PokemonListContent(
 ) {
     val dimensions = AppTheme.dimensions
     val gridState = rememberLazyGridState()
+    val animatedItems = remember { mutableStateOf(setOf<Int>()) }
 
     // Pagination logic - Load more when reaching near the bottom
     LaunchedEffect(gridState, state.isLoadingMore, state.canLoadMore, state.searchQuery) {
@@ -122,7 +123,7 @@ fun PokemonListContent(
             val layoutInfo = gridState.layoutInfo
             val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
             val totalItems = layoutInfo.totalItemsCount
-            
+
             // Return true when we're within 4 items of the bottom (2 rows in grid)
             lastVisibleIndex >= totalItems - 5 && totalItems > 0
         }
@@ -189,12 +190,14 @@ fun PokemonListContent(
                             val onClick = remember(pokemon.id) {
                                 { onPokemonClick(pokemon) }
                             }
-                            
+                            val isAnimated = animatedItems.value.contains(pokemon.id)
                             AnimatedPokemonCard(
                                 pokemon = pokemon,
                                 index = index,
                                 onClick = onClick,
-                                imageLoader = imageLoader
+                                imageLoader = imageLoader,
+                                isAnimated = isAnimated,
+                                onAnimated = { animatedItems.value += pokemon.id }
                             )
                         }
 
@@ -236,28 +239,27 @@ private fun AnimatedPokemonCard(
     index: Int,
     onClick: () -> Unit,
     imageLoader: ImageLoader,
+    isAnimated: Boolean,
+    onAnimated: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Use derivedStateOf to reduce recompositions - only recompose when animation actually changes
     val animationState = remember(pokemon.id) {
         AnimationState(
-            offsetY = Animatable(100f),
-            alpha = Animatable(0f),
-            scale = Animatable(0.8f)
+            offsetY = Animatable(if (isAnimated) 0f else 100f),
+            alpha = Animatable(if (isAnimated) 1f else 0f),
+            scale = Animatable(if (isAnimated) 1f else 0.8f)
         )
     }
-    
-    // Track if animation has completed to avoid re-animating
-    var hasAnimated by remember(pokemon.id) { mutableStateOf(false) }
-    
+
     // Only animate once when the card first appears
     LaunchedEffect(pokemon.id) {
-        if (!hasAnimated) {
-            hasAnimated = true
+        if (!isAnimated) {
+            onAnimated()
             // Stagger the animation based on index (only for items within first 2 rows)
             val staggerDelay = if (index < 10) (index % 10) * 30L else 0L
             delay(staggerDelay)
-            
+
             // Run all animations in parallel for snappier feel
             launch {
                 animationState.offsetY.animateTo(
@@ -288,7 +290,7 @@ private fun AnimatedPokemonCard(
             }
         }
     }
-    
+
     PokemonGridCard(
         pokemon = pokemon,
         onClick = onClick,
@@ -321,7 +323,7 @@ private fun PokemonGridCard(
     modifier: Modifier = Modifier
 ) {
     val dimensions = AppTheme.dimensions
-    
+
     // Remember parsed colors to avoid parsing on every recomposition
     val primaryColor = remember(pokemon.primaryType?.colorHex) {
         pokemon.primaryType?.let { parseColorHex(it.colorHex) }
@@ -332,7 +334,7 @@ private fun PokemonGridCard(
     } else {
         primaryColor
     }
-    
+
     val secondaryColor = remember(pokemon.types.getOrNull(1)?.colorHex) {
         pokemon.types.getOrNull(1)?.let { parseColorHex(it.colorHex) }
             ?: Color.Unspecified
@@ -378,7 +380,7 @@ private fun PokemonGridCard(
                         )
                     )
             )
-            
+
             // Decorative circles for depth
             Box(
                 modifier = Modifier
@@ -389,7 +391,7 @@ private fun PokemonGridCard(
                     .alpha(0.1f)
                     .background(finalPrimaryColor)
             )
-            
+
             Box(
                 modifier = Modifier
                     .size(dimensions.imageSizeSmall)
@@ -449,7 +451,7 @@ private fun PokemonGridCard(
                             .clip(CircleShape)
                             .background(finalPrimaryColor)
                     )
-                    
+
                     // Glow layer
                     Box(
                         modifier = Modifier
@@ -465,7 +467,7 @@ private fun PokemonGridCard(
                                 )
                             )
                     )
-                    
+
                     // Main image container
                     Surface(
                         modifier = Modifier
@@ -523,7 +525,7 @@ private fun PokemonGridCard(
                         val typeColor = remember(type.colorHex) {
                             parseColorHex(type.colorHex)
                         }
-                        
+
                         Box(
                             modifier = Modifier
                                 .shadow(
@@ -546,7 +548,7 @@ private fun PokemonGridCard(
                                 fontSize = 10.sp
                             )
                         }
-                        
+
                         if (index < pokemon.types.take(2).size - 1) {
                             Spacer(modifier = Modifier.width(dimensions.spaceSmall - 2.dp))
                         }
@@ -562,7 +564,7 @@ private fun EmptyContent(
     modifier: Modifier = Modifier
 ) {
     val dimensions = AppTheme.dimensions
-    
+
     Column(
         modifier = modifier.padding(dimensions.spaceLarge),
         horizontalAlignment = Alignment.CenterHorizontally
